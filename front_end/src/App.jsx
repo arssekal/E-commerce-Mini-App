@@ -1,4 +1,5 @@
 import './App.css'
+import CartItem from './components/CartItem'
 import NavBar from './components/NavBar'
 import ProductCard from './components/ProductCard'
 
@@ -8,9 +9,10 @@ function App() {
     <div className='app'>
       <div className='container'>
         {/* <NavBar/> */}
-        <ProductCard/>
-        <ProductCard/>
-        <ProductCard/>
+        {/* <ProductCard/> */}
+        <CartItem/>
+        <CartItem/>
+        <CartItem/>
         <h1 style={{marginTop: "100px", color: "black"}}>hello</h1>
 
       </div>

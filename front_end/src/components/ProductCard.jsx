@@ -18,7 +18,7 @@ function ProductCard() {
           component="img"
           alt="green iguana"
           height="140"
-          image="/images/image1.jpg"
+          image="/images/image4.jpg"
         />
       </div>
 
