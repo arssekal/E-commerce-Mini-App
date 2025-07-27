@@ -1,11 +1,16 @@
 import './App.css'
+import NavBar from './components/NavBar'
 
 function App() {
 
   return (
-    <>
-      <h1>hello world</h1>
-    </>
+    <div className='app'>
+      <div className='container'>
+        <NavBar/>
+        <h1 style={{marginTop: "100px", color: "black"}}>hello</h1>
+
+      </div>
+    </div>
   )
 }
 
