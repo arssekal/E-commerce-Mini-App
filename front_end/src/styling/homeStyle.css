@@ -1,0 +1,18 @@
+.home {
+    margin-top: 100px;
+}
+.home .product-header {
+    
+}
+.home .product-header h1 {
+    color: black;
+}
+.home .product-header p {
+    color: #777;
+}
+.home .products {
+    display: grid;
+    gap: 20px;
+    padding: 0px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
