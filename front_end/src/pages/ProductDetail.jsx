@@ -1,0 +1,108 @@
+import React, { useState } from 'react'
+// style
+import '../styling/productDetailStyle.css'
+// materila ui
+import AddIcon from '@mui/icons-material/Add';
+import Button from '@mui/material/Button';
+import RemoveIcon from '@mui/icons-material/Remove';
+import { Link, useParams } from 'react-router-dom';
+// icons
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+// context
+import { useCartData } from '../contexts/CartContext';
+import { useProducts } from '../contexts/AllProducts';
+import { useAlert } from '../contexts/AlertContext'
+
+function ProductDetail() {
+  const {setOpen} = useAlert()
+  const { allProducts } = useProducts()
+  const {cartData, setProductCount, setCartData} = useCartData();  
+  const [quantity, setQuantity] = useState(1)
+  let { productId } = useParams();
+
+  
+  let product = null
+  for(const prod of allProducts) {
+    if(prod.id === Number(productId)) {
+        product = prod;
+    }
+  }
+  function handleAddToCartCLick() {
+    let alreadyAdded = false
+
+    setProductCount((prev) => prev + quantity)
+    const updatedCartData = [...cartData].map((p) => {
+      if(p.id === product.id) {
+        alreadyAdded = true
+        return {
+          ...p,
+          quantity: p.quantity + quantity
+        }
+      }
+      return p
+    })
+    if(alreadyAdded) {
+      setCartData(() => updatedCartData)
+    } else {
+      setCartData((prev) => {
+        return [
+          ...prev,
+          {...product, quantity: quantity}
+        ]
+      }
+      )
+    }
+    setOpen(true)
+  }
+  return (
+    <div className='product-details'>
+        <div>
+            <Link to={"/"} className='return-home'>
+                <KeyboardBackspaceIcon/>
+                <h5>Back to Products</h5>
+            </Link>
+        </div>
+        <div className='content'>
+            <div className='image'>
+                <img src={product.imageUrl} alt={product.title} />
+            </div>
+            <div className='details'>
+                <h2>{product.title}</h2>
+                <span className='price'>${product.price}</span>
+                <p>{product.description}</p>
+                <div className='quantity'>
+                    <h5>Quantity</h5>
+                    <div className='add-remove'>
+                        <div className='btn'
+                        onClick={() => {
+                            setQuantity((prev) => prev + 1)
+                        }}
+                        >
+                            <AddIcon/>
+                        </div>
+                        <span>{quantity}</span>
+                        <div className='btn'
+                        style={{cursor: quantity === 1 ? "not-allowed": "pointer"}}
+                        onClick={() => {
+                            if(quantity > 1) {
+                                setQuantity((prev) => prev - 1)
+                            }
+                        }}
+                        >
+                            <RemoveIcon/>
+                        </div>
+                    </div>
+                    <Button variant="contained" disableElevation
+                    style={{width: "100%"}}
+                    onClick={handleAddToCartCLick}
+                    >
+                        Add to cart $79.99
+                    </Button>
+                </div>
+            </div>
+        </div>
+    </div>
+  )
+}
+
+export default ProductDetail

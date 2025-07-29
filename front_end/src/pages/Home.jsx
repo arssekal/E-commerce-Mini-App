@@ -2,8 +2,15 @@ import React from 'react'
 import ProductCard from '../components/ProductCard'
 // style
 import '../styling/homeStyle.css';
+// products context
+import { useProducts } from '../contexts/AllProducts';
 
 function Home() {
+  const { allProducts } = useProducts()
+  const listProducts =  allProducts.map((prod) => {
+    return <ProductCard product={prod} key={prod.id}/>
+  })
+
   return (
     <div className='home'>
         <div className='product-header'>
@@ -11,15 +18,7 @@ function Home() {
           <p>Discover our latest collection of amazing products</p>
         </div>
         <div className='products'>
-          <ProductCard/>
-          <ProductCard/>
-          <ProductCard/>
-          <ProductCard/>
-          
-          <ProductCard/>
-          <ProductCard/>
-          <ProductCard/>
-          <ProductCard/>
+          {listProducts}
         </div>
     </div>
   )

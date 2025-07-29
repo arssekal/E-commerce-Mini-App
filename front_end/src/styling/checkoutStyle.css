@@ -1,0 +1,67 @@
+.checkout {
+    margin-bottom: 50px;
+}
+.checkout h1 {
+    margin-bottom: 10px;
+    letter-spacing: 1.5px;
+}
+.checkout .checkout-content {
+    display: grid;
+    grid-template-columns: 70% 30%;
+    gap: 20px;
+}
+  
+@media (max-width: 768px) {
+    .checkout .checkout-content  {
+      grid-template-columns: 1fr;
+    }
+}
+.checkout .shipping-info {
+    border: 2px solid #d7ccc8;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 40px;
+}
+.checkout .shipping-info h2 {
+    margin: 0  0 20px 5px;
+}
+
+
+.checkout .order-summary {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: 2px solid #d7ccc8;
+    height: fit-content;
+}
+.checkout .order-summary h4 {
+    font-size: 20px;
+    color: rgb(66, 65, 65);
+    margin-bottom: 20px;
+}
+.checkout .order-summary .summary {
+
+}
+.checkout .order-summary .summary .order-item {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+.checkout .order-summary .first-div {
+    display: flex;
+    gap: 10px;
+}
+.checkout .first-div img {
+    width: 100px;
+    border-radius: 5px;
+}
+.checkout .order-summary .total {
+    border-top: 2px solid #d7ccc8;
+    padding-top: 15px;
+    display: flex;
+    justify-content: space-between;
+} 
+.checkout .order-summary .total-price {
+ font-size: 20px;   
+ color:  #6366F1;
+ font-weight: 500;
+}

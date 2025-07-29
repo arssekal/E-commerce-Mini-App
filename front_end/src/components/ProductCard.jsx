@@ -8,28 +8,68 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 // style
 import '../styling/productCardStyle.css'
+import { Link } from 'react-router-dom';
+// context
+import { useCartData } from '../contexts/CartContext';
+import { useAlert } from '../contexts/AlertContext'
+ 
 
-function ProductCard() {
+function ProductCard({product}) {
+  const {cartData, setCartData, setProductCount} = useCartData();
+  const {setOpen} = useAlert()
+
+  function handleAddToCartCLick() {
+    let alreadyAdded = false
+    setProductCount((prev) => prev + 1)
+    const updatedCartData = [...cartData].map((p) => {
+      if(p.id === product.id) {
+        alreadyAdded = true
+        return {
+          ...p,
+          quantity: p.quantity + 1
+        }
+      }
+      return p
+    })
+    if(alreadyAdded) {
+      setCartData(() => updatedCartData)
+    } else {
+      setCartData((prev) => {
+        return [
+          ...prev,
+          {...product, quantity: 1}
+        ]
+      }
+      )
+    }
+    setOpen(() => false)
+    setOpen(() => true)
+  }
+
   return (
     <Card className='card'>
       <div className="image-wrapper">
         <CardMedia
           className='image-item'
           component="img"
-          alt="green iguana"
+          alt={product.title}
           height="140"
-          image="/images/image4.jpg"
+          image={product.imageUrl}
         />
       </div>
 
       <CardContent className='card-content'>
         <Typography gutterBottom variant="h5" component="div">
-          Wireless Bluetooth Headphones
+         {product.title}
+         <span style={{display: "block", marginTop: "10px"}}>${product.price}</span>
         </Typography>
-        <span>$79.99</span>
         <div className='card-actions'>
-          <Button size="small" variant="outlined">View Details</Button>
-          <Button size="small" variant="contained" style={{backgroundColor: "#6366F1"}}>Add to Cart</Button>
+          <Link to={"/product/"+product.id}>
+            <Button size="small" variant="outlined">View Details</Button>
+          </Link>
+          <Button size="small" variant="contained" style={{backgroundColor: "#6366F1"}}
+          onClick={handleAddToCartCLick}
+          >Add to Cart</Button>
         </div>
       </CardContent>
     </Card>

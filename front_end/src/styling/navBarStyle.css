@@ -17,10 +17,21 @@
 .shop-cart span {
     font-size: 15px;
     position: absolute;
+    background-color: white;
+    color: #6366F1;
+    padding: 0px 5px;
+    border-radius: 50%;
     top: 10px;
     right: 20px;
-    z-index: 5;
+    font-weight: 600;
+    border: 1px solid #6366F1;
+    z-index: 1;
 }
 .shop-cart .icon-cart {
     cursor: pointer;
+    color: white;
+}
+/* space betwenn nav bar and other elements */
+.space {
+    margin-bottom: 120px;
 }

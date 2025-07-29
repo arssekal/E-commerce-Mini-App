@@ -9,9 +9,11 @@ import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-
+// context
+import { useCartData } from '../contexts/CartContext';
 // styling
 import '../styling/navBarStyle.css'
+import { Link } from 'react-router-dom';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -56,7 +58,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 function NavBar() {
+  const {productCount} = useCartData();
   return (
+    <>
       <AppBar style={{position: "fixed"}}>
         <Toolbar>
           <IconButton
@@ -88,13 +92,17 @@ function NavBar() {
             />
           </Search>
           <div  className='shop-cart'>
-            <span>2</span>
-            <div>
+            <span>{productCount}</span>
+            <Link to={"/cart"}>
+              <div>
                 <ShoppingCartIcon className='icon-cart'/>
-            </div>
+              </div>
+            </Link>
           </div>
         </Toolbar>
       </AppBar>
+      <div className='space'></div>
+    </>
   )
 }
 

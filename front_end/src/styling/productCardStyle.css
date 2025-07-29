@@ -2,6 +2,7 @@
     max-width: 345px; 
     margin-top: 60px;
     padding: 20px;
+    border: 1px solid #d7ccc8;
 }
 .image-item {
     object-fit: cover;
@@ -15,7 +16,7 @@
 .image-wrapper::before {
     content: "";
     position: absolute;
-    background-color: #eee;
+    background-color: #d7ccc8;
     opacity: 0.2;
     width: 100%;
     height: 100%;
@@ -33,8 +34,12 @@
     transform: scale(1.1);
 }
 .card-content {
-    border: 1px solid #eee;
+    border: 1px solid #d7ccc8;
     border-top: none;
+    height: 210px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 .card-content span {
     font-size: 22px;
