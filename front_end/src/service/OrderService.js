@@ -1,0 +1,20 @@
+import axios from "axios";
+
+const REST_API_BASE_URL = "http://localhost:8080/api/orders/";
+
+export const listOrders = () => {
+    return axios.get(REST_API_BASE_URL)
+}
+
+export const addOrder = (order) => {
+    return axios.post(REST_API_BASE_URL, order);
+}
+
+export const getOrder = (id) => {
+    return axios.get(REST_API_BASE_URL + id);
+}
+
+export const deleteOrder = (id) => {
+    return axios.delete(REST_API_BASE_URL + id);
+} 
+

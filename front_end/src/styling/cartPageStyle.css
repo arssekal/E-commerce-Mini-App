@@ -8,10 +8,7 @@
     .cart .cart-content {
       grid-template-columns: 1fr;
     }
-    /* .cart .cart-items, .cart .order-summary {
-        margin-left: 10px;
-        margin-right: 10px;
-    } */
+
 }
 .cart h1 {
     margin-bottom: 20px;
@@ -22,6 +19,11 @@
     border-radius: 5px;
     border: 2px solid #d7ccc8;
     margin-bottom: 50px;
+}
+@media (max-width: 600px) {
+    .cart .order-summary {
+        width: calc(100% - 30px);
+    }
 }
 .order-summary .item {
     margin-bottom: 15px;

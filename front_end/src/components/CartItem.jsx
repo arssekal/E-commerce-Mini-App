@@ -10,7 +10,7 @@ import { useCartData } from '../contexts/CartContext';
 
 
 function CartItem({product}) {
-  const {cartData, setCartData, setProductCount} = useCartData()
+  const {cartData, setCartData, setProductCount, productCount} = useCartData()
 
   function handleAddProductCount() {
     const updatedCartData = [...cartData].map((p) => {
@@ -23,7 +23,10 @@ function CartItem({product}) {
         return p
     })
     setProductCount((prev) => prev + 1)
+    localStorage.setItem("productsCount", productCount+1)
     setCartData(() => updatedCartData)
+    localStorage.setItem("cartData", JSON.stringify(updatedCartData))
+
   }
   function handleRemoveProductCount() {
     if(product.quantity === 1) {
@@ -40,15 +43,20 @@ function CartItem({product}) {
         return p
     })
     setProductCount((prev) => prev - 1)
+    localStorage.setItem("productsCount", productCount-1)
     setCartData(() => updatedCartData)
+    localStorage.setItem("cartData", JSON.stringify(updatedCartData))
   }
-
+  
   function deleteProduct() {
     const cartDataAfterDeletion = cartData.filter((p) => {
-        return p.id !== product.id
+      return p.id !== product.id
     })
     setProductCount((prev) => prev - product.quantity)
+    localStorage.setItem("productsCount", productCount - product.quantity)
     setCartData(cartDataAfterDeletion)
+    localStorage.setItem("cartData", JSON.stringify(cartDataAfterDeletion))
+
   }
   return (
     <div className='cart-item'>
@@ -66,7 +74,7 @@ function CartItem({product}) {
             <div className='btn'
             onClick={handleAddProductCount}
             >
-                <AddIcon/>
+              <AddIcon/>
             </div>
             <span>{product.quantity}</span>
             <div className='btn'
@@ -77,7 +85,7 @@ function CartItem({product}) {
             <div className='btn delete'
             onClick={deleteProduct}
             >
-                <DeleteOutlineIcon/>
+              <DeleteOutlineIcon/>
             </div>
         </div>
     </div>

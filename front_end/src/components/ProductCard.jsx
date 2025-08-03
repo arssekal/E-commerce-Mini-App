@@ -15,12 +15,13 @@ import { useAlert } from '../contexts/AlertContext'
  
 
 function ProductCard({product}) {
-  const {cartData, setCartData, setProductCount} = useCartData();
+  const {cartData, setCartData, setProductCount, productCount} = useCartData();
   const {setOpen} = useAlert()
 
   function handleAddToCartCLick() {
     let alreadyAdded = false
     setProductCount((prev) => prev + 1)
+    localStorage.setItem("productsCount", productCount+1)
     const updatedCartData = [...cartData].map((p) => {
       if(p.id === product.id) {
         alreadyAdded = true
@@ -33,6 +34,7 @@ function ProductCard({product}) {
     })
     if(alreadyAdded) {
       setCartData(() => updatedCartData)
+      localStorage.setItem("cartData", JSON.stringify(updatedCartData))
     } else {
       setCartData((prev) => {
         return [
@@ -41,6 +43,12 @@ function ProductCard({product}) {
         ]
       }
       )
+      localStorage.setItem("cartData", JSON.stringify(
+        [
+        ...cartData,
+        {...product, quantity: 1}
+        ]
+      ))
     }
     setOpen(() => false)
     setOpen(() => true)

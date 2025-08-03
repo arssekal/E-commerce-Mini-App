@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 // material ui
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -7,26 +7,139 @@ import Button from '@mui/material/Button';
 import '../styling/checkoutStyle.css';
 // context
 import { useCartData } from '../contexts/CartContext';
+import { Link, useNavigate } from 'react-router-dom';
+import { addOrder } from '../service/OrderService';
+// email
 
 function Checkout() {
-  const {cartData} = useCartData();
-  let totalPrice = 0;
-  const listOfOrders = cartData.map((prod) => {
-    totalPrice += prod.price * prod.quantity 
-    return ( 
-    <div className='order-item'>
-        <div className='first-div'>
-            <img src={prod.imageUrl} alt={prod.title} />
-            <div>
-                <h5>{prod.title}</h5>
-                <p>Qty: <span>{prod.quantity}</span></p>
-            </div>
-        </div>
-        <span className='price'>${(prod.price * prod.quantity).toFixed(2)}</span>
-    </div>
-    );
+  const {cartData, setCartData, setProductCount} = useCartData();
+  const [clientInfo, setClientInfo] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    notes: "Notes are not provided"
   })
-  return (
+  const [validateClientInfo, setValidateClientInfo] = useState({
+    isNameInValid: false,
+    isEmaiInlValid: false,
+    isAddressInValid: false,
+    isPhonelnValid: false
+  })
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if(cartData.length === 0 && JSON.parse(localStorage.getItem("cartData")) !== null ) {
+      const cartDataFromLocalStorage = JSON.parse(localStorage.getItem("cartData"))
+      setCartData(cartDataFromLocalStorage)
+    }
+  }, [cartData, setCartData])
+
+  let totalPrice = 0;
+
+// handlers
+function handleNameChange(e) {
+    setClientInfo({...clientInfo, name: e.target.value})
+    setValidateClientInfo({...validateClientInfo, isNameInValid: e.target.value.trim() === ""})
+} 
+function handleEmailChange(e) {
+    setClientInfo({...clientInfo, email: e.target.value})
+    setValidateClientInfo({...validateClientInfo, isEmaiInlValid: isEmailInvalidCheck(e.target.value)})
+} 
+function handlePhoneChange(e) {
+    setClientInfo({...clientInfo, phone: e.target.value})
+    setValidateClientInfo({...validateClientInfo, isPhonelnValid: isPhoneInvalidCheck(e.target.value)})
+} 
+function handleAddressChange(e) {
+    setClientInfo({...clientInfo, address: e.target.value})
+    setValidateClientInfo({...validateClientInfo, isAddressInValid: e.target.value.trim() === ""})
+} 
+function handleNotesChange(e) {
+    setClientInfo({...clientInfo, notes: e.target.value})
+} 
+// other functions 
+function isEmailInvalidCheck(email) {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return !emailRegex.test(email)
+}
+function isPhoneInvalidCheck(phone) {
+    const phoneRegex = /^(?:\+212|00212|212|0)?[\-]?[6-7]\d{8}$/;
+    return !phoneRegex.test(phone)
+}
+function disabeOrderBtn() {
+    return(
+        validateClientInfo.isNameInValid  ||
+        validateClientInfo.isEmaiInlValid ||
+        validateClientInfo.isPhonelnValid ||
+        validateClientInfo.isAddressInValid
+    )  
+}
+// handle client order
+function handleOrder() {
+    setValidateClientInfo(
+        {
+            isNameInValid: clientInfo.name.trim() === "",
+            isEmaiInlValid: isEmailInvalidCheck(clientInfo.email),
+            isAddressInValid: clientInfo.address.trim() === "",
+            isPhonelnValid: isPhoneInvalidCheck(clientInfo.phone)
+        }
+    )
+    const clienInfoInValid = clientInfo.name.trim() === "" ||
+                             isEmailInvalidCheck(clientInfo.email) ||
+                             clientInfo.address.trim() === "" ||
+                             isPhoneInvalidCheck(clientInfo.phone)
+                             
+    if(!clienInfoInValid) {
+        console.log("================")
+        console.log(cartData)
+        console.log(clientInfo)
+        localStorage.removeItem("cartData")
+        console.log(makeOrder(clientInfo, cartData))
+
+        addOrder(makeOrder(clientInfo, cartData))
+
+        setProductCount(0)
+        localStorage.removeItem("productsCount")
+        navigate("/order-success")                        
+    } 
+}
+
+function makeOrder(clinetInformations, cartData) {
+    let totalPrice = 0
+    const items = cartData.map((item) => {
+        totalPrice += item.price * item.quantity 
+        return {
+            product: { "id": item.id },
+            quantity: item.quantity,
+            unitPrice: item.price
+        }
+    })
+    return {
+        customerName: clinetInformations.name,
+        email: clinetInformations.email,
+        total: totalPrice,
+        orderDate: new Date().toLocaleDateString('en-CA'),
+        items: items
+    }
+}
+
+const listOfOrders = cartData.map((prod) => {
+  totalPrice += prod.price * prod.quantity 
+  return ( 
+  <div className='order-item'>
+      <div className='first-div'>
+          <img src={prod.imageUrl} alt={prod.title} />
+          <div>
+              <h5>{prod.title}</h5>
+              <p>Qty: <span>{prod.quantity}</span></p>
+          </div>
+      </div>
+      <span className='price'>${(prod.price * prod.quantity).toFixed(2)}</span>
+  </div>
+  );
+})
+
+return (
     <div className='checkout'>
         <h1>Checkout</h1>
         <div className='checkout-content'>
@@ -38,12 +151,29 @@ function Checkout() {
                     noValidate
                     autoComplete="off"
                     >
-                    <TextField id="outlined-basic" required fullWidth label="name" variant="outlined" />
-                    <TextField id="outlined-basic" required fullWidth label="email" type='email' variant="outlined" />
-                    <TextField id="outlined-basic" required fullWidth label="Shipping Address" variant="outlined" />    
-                    <TextField id="outlined-basic" fullWidth label="Notes (Optional)" variant="outlined" />    
+                    <TextField id="outlined-basic" required fullWidth label="name" variant="outlined" 
+                    error={validateClientInfo.isNameInValid}
+                    onChange={handleNameChange}
+                    />
+                    <TextField id="outlined-basic" required fullWidth label="email"  variant="outlined" 
+                    error={validateClientInfo.isEmaiInlValid}
+                    onChange={handleEmailChange}
+                    />
+                    <TextField id="outlined-basic" required fullWidth label="Phone Number"  variant="outlined" 
+                    error={validateClientInfo.isPhonelnValid}
+                    onChange={handlePhoneChange}
+                    />
+                    <TextField id="outlined-basic" required fullWidth label="Shipping Address" variant="outlined" 
+                    error={validateClientInfo.isAddressInValid}
+                    onChange={handleAddressChange}
+                    />    
+                    <TextField id="outlined-basic" fullWidth label="Notes (Optional)" variant="outlined" 
+                    onChange={handleNotesChange}
+                    />    
                     <Button variant="contained" disableElevation
                         style={{width: "100%"}}
+                        onClick={handleOrder}
+                        disabled={disabeOrderBtn()}
                         >
                             Place Order | <span style={{marginLeft: "5px"}}>${totalPrice}</span>
                     </Button>

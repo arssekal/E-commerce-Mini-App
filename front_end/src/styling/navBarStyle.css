@@ -10,9 +10,12 @@
     transition: .3s;
 }
 .shop-cart div:hover {
-    background-color: #6366F1;
+    background-color: white;
     display: inline-block;
     
+}
+.shop-cart div:hover .icon-cart {
+    color: #6366F1;
 }
 .shop-cart span {
     font-size: 15px;
@@ -21,7 +24,7 @@
     color: #6366F1;
     padding: 0px 5px;
     border-radius: 50%;
-    top: 10px;
+    top: 7px;
     right: 20px;
     font-weight: 600;
     border: 1px solid #6366F1;
@@ -33,5 +36,5 @@
 }
 /* space betwenn nav bar and other elements */
 .space {
-    margin-bottom: 120px;
+    margin-bottom: 100px;
 }

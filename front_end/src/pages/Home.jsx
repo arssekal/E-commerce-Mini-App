@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import ProductCard from '../components/ProductCard'
 // style
 import '../styling/homeStyle.css';
@@ -7,6 +7,7 @@ import { useProducts } from '../contexts/AllProducts';
 
 function Home() {
   const { allProducts } = useProducts()
+  
   const listProducts =  allProducts.map((prod) => {
     return <ProductCard product={prod} key={prod.id}/>
   })

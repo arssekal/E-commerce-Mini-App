@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 // style
 import '../styling/productDetailStyle.css'
 // materila ui
@@ -16,9 +16,10 @@ import { useAlert } from '../contexts/AlertContext'
 function ProductDetail() {
   const {setOpen} = useAlert()
   const { allProducts } = useProducts()
-  const {cartData, setProductCount, setCartData} = useCartData();  
+  const {cartData, setProductCount, setCartData, productCount} = useCartData();  
   const [quantity, setQuantity] = useState(1)
   let { productId } = useParams();
+
 
   
   let product = null
@@ -27,12 +28,24 @@ function ProductDetail() {
         product = prod;
     }
   }
+
+  useEffect(() => {
+    if(cartData.length === 0 && JSON.parse(localStorage.getItem("cartData")) !== null ) {
+      const cartDataFromLocalStorage = JSON.parse(localStorage.getItem("cartData"))
+      setCartData(cartDataFromLocalStorage)
+    }
+  }, [cartData, setCartData])
+
   function handleAddToCartCLick() {
     let alreadyAdded = false
 
+    // changes how many products in the cart
     setProductCount((prev) => prev + quantity)
-    const updatedCartData = [...cartData].map((p) => {
+    localStorage.setItem("productsCount", productCount+quantity)
+
+    const updatedCartData = cartData.map((p) => {
       if(p.id === product.id) {
+        alert("already exist")
         alreadyAdded = true
         return {
           ...p,
@@ -43,6 +56,7 @@ function ProductDetail() {
     })
     if(alreadyAdded) {
       setCartData(() => updatedCartData)
+      localStorage.setItem("cartData", JSON.stringify(updatedCartData))
     } else {
       setCartData((prev) => {
         return [
@@ -51,6 +65,10 @@ function ProductDetail() {
         ]
       }
       )
+      localStorage.setItem("cartData", JSON.stringify([
+        ...cartData,
+        {...product, quantity: quantity}
+      ]))
     }
     setOpen(true)
   }

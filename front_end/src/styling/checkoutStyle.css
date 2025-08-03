@@ -38,9 +38,9 @@
     color: rgb(66, 65, 65);
     margin-bottom: 20px;
 }
-.checkout .order-summary .summary {
+/* .checkout .order-summary .summary {
 
-}
+} */
 .checkout .order-summary .summary .order-item {
     margin-bottom: 15px;
     display: flex;

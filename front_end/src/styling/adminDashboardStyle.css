@@ -1,0 +1,32 @@
+.navBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+}
+.navBar .user {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    gap: 10px;
+    transition: .3s;
+}
+.navBar .user:hover {
+    background-color: #eee;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.navBar .user .icon {
+    font-size: 35px;
+}
+.toggle {
+    background-color: yellow;
+    height: 200px;
+    margin-top: 20px;
+}
+@media (min-width: 500px) {
+    .toggle {
+        display: none;
+        background-color: red;
+    }
+}

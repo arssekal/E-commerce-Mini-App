@@ -1,18 +1,27 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import CartItem from '../components/CartItem'
 import Button from '@mui/material/Button';
 // style
 import '../styling/cartPageStyle.css'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 // context
 import { useCartData } from '../contexts/CartContext';
 
 
 function Cart() {
-  const {cartData} = useCartData();
+  const {cartData, setCartData} = useCartData();
   const listOfProductsAdded = cartData.map((prod) => {
     return  <CartItem product={prod} key={prod.id}/>
   })
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if(cartData.length === 0 && JSON.parse(localStorage.getItem("cartData")) !== null ) {
+      const cartDataFromLocalStorage = JSON.parse(localStorage.getItem("cartData"))
+      setCartData(cartDataFromLocalStorage)
+    }
+  }, [cartData, setCartData])
 
   let totalPrice = 0;
 
@@ -40,10 +49,9 @@ function Cart() {
           gap: "20px",
         }}>
           <p>Your cart is empty</p>
-          <Link to={"/"}>
             <Button size="small" variant="contained" style={{backgroundColor: "#6366F1"}}
+            onClick={() => navigate("/")}
             >Continue Shopping</Button>
-          </Link>
         </div>
       )
     }

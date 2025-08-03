@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 // materila ui
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
@@ -57,8 +57,16 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+
+
 function NavBar() {
-  const {productCount} = useCartData();
+  const {productCount, setProductCount} = useCartData();
+  useEffect(() => {
+    if(productCount === 0 && Number(JSON.parse(localStorage.getItem("productsCount"))) !== 0) {
+      setProductCount(Number(JSON.parse(localStorage.getItem("productsCount"))))
+    }
+  }, [productCount, setProductCount])
+  
   return (
     <>
       <AppBar style={{position: "fixed"}}>

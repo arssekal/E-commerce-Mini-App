@@ -1,13 +1,13 @@
-package com.arssekal.EcommerceApplication;
+package com.arssekal.backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class EcommerceApplication {
+public class BackendApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(EcommerceApplication.class, args);
+		SpringApplication.run(BackendApplication.class, args);
 	}
 
 }
