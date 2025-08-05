@@ -38,3 +38,24 @@
 .space {
     margin-bottom: 100px;
 }
+
+/* drop down */
+.drop-down {
+    width: 200px;
+}
+.admin-login {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: .3s;
+}
+.admin-login:hover {
+    background-color: #eee;
+    padding-left: 15px;
+}
+.admin-login span {
+    text-decoration: none;
+}

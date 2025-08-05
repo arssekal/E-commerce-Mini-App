@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import ProductCard from '../components/ProductCard'
 // style
 import '../styling/homeStyle.css';

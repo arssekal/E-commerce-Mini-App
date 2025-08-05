@@ -50,6 +50,7 @@ function ProductCard({product}) {
         ]
       ))
     }
+    
     setOpen(() => false)
     setOpen(() => true)
   }

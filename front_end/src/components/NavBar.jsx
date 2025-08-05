@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 // materila ui
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
@@ -14,6 +14,10 @@ import { useCartData } from '../contexts/CartContext';
 // styling
 import '../styling/navBarStyle.css'
 import { Link } from 'react-router-dom';
+// propover
+import Popover from '@mui/material/Popover';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -66,9 +70,22 @@ function NavBar() {
       setProductCount(Number(JSON.parse(localStorage.getItem("productsCount"))))
     }
   }, [productCount, setProductCount])
+
+  // drop down menu
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleAnchorClose = () => {
+    setAnchorEl(null);
+  };
+
   
   return (
     <>
+    <BasicPopover anchorEl={anchorEl} handleAnchorClose={handleAnchorClose} handleClick={handleClick}/>
       <AppBar style={{position: "fixed"}}>
         <Toolbar>
           <IconButton
@@ -77,6 +94,7 @@ function NavBar() {
             color="inherit"
             aria-label="open drawer"
             sx={{ mr: 2 }}
+            onClick={handleClick}
           >
             <MenuIcon />
           </IconButton>
@@ -115,3 +133,31 @@ function NavBar() {
 }
 
 export default NavBar
+function BasicPopover({anchorEl, handleAnchorClose}) {
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
+
+  return (
+    <div className='drop-down'>
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleAnchorClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+      >
+        <Typography sx={{ p: 2 }}>
+          <Link to="/admin">
+            <div className='admin-login'>
+              <AccountCircleIcon/>
+              <span>Admin Login</span>
+            </div>
+          </Link>
+        </Typography>
+      </Popover>
+    </div>
+  );
+}

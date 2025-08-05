@@ -37,6 +37,7 @@ public class OrderServiceImpl implements OrderService {
                 // Ensure product is managed (fetched from DB)
                 Product product = productRepository.findById(itemDto.getProduct().getId())
                     .orElseThrow(() -> new RuntimeException("Product not found"));
+                    
                 item.setProduct(product);
 
                 item.setOrder(order); // Set the relationship

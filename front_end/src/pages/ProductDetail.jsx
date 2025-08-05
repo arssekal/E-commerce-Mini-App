@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 // style
 import '../styling/productDetailStyle.css'
 // materila ui
@@ -22,12 +22,15 @@ function ProductDetail() {
 
 
   
-  let product = null
-  for(const prod of allProducts) {
-    if(prod.id === Number(productId)) {
-        product = prod;
-    }
-  }
+  // let product = useMemo(() => {
+  //   for(const prod of allProducts) {
+  //     if(prod.id === Number(productId)) {
+  //       console.log("image url: "+prod.imageUrl)
+  //       return prod;
+  //     }
+  //   }
+  //   return null
+  // }, [productId, allProducts])
 
   useEffect(() => {
     if(cartData.length === 0 && JSON.parse(localStorage.getItem("cartData")) !== null ) {
@@ -45,7 +48,6 @@ function ProductDetail() {
 
     const updatedCartData = cartData.map((p) => {
       if(p.id === product.id) {
-        alert("already exist")
         alreadyAdded = true
         return {
           ...p,
@@ -72,6 +74,26 @@ function ProductDetail() {
     }
     setOpen(true)
   }
+
+  if (!allProducts || allProducts.length === 0) {
+    return (
+      <div className='product-details'>
+        <p style={{ textAlign: "center", padding: "2rem" }}>Loading product details...</p>
+      </div>
+    );
+  }
+
+  const product = allProducts.find(p => p.id === Number(productId));
+
+  if (!product) {
+    return (
+      <div className='product-details'>
+        <p style={{ textAlign: "center", padding: "2rem", color: "red" }}>Product not found.</p>
+      </div>
+    );
+  }
+
+
   return (
     <div className='product-details'>
         <div>
@@ -114,7 +136,7 @@ function ProductDetail() {
                     style={{width: "100%"}}
                     onClick={handleAddToCartCLick}
                     >
-                        Add to cart $79.99
+                      Add to cart ${product.price}
                     </Button>
                 </div>
             </div>
