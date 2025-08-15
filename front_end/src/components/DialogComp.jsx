@@ -17,7 +17,9 @@ function DialogComp({open, setOpen, content}) {
       setProduct({
         title: content.product.title || "",
         description: content.product.description || "",
-        price: content.product.price || 0,
+        price: content.product.price || null,
+        // change
+        oldPrice: content.product.oldPrice || null,
         imageUrl: content.product.imageUrl || null,
         imageFile: null,
         stockQuantity: content.product.stockQuantity || 0,
@@ -32,11 +34,20 @@ function DialogComp({open, setOpen, content}) {
     // change
     const handleAddUpdateProduct = async (e) => {
       e.preventDefault();
+
+      if(product.price < 0) {
+        return
+      }
+      if(product.oldPrice < 0) {
+        return
+      }
     
       const formData = new FormData();
       formData.append("title", product.title);
       formData.append("description", product.description);
       formData.append("price", product.price);
+      // change
+      formData.append("oldPrice", product.oldPrice);
       formData.append("stockQuantity", product.stockQuantity);
       formData.append("image", product.imageFile); // file input
       formData.append("id", product.id); 
@@ -111,6 +122,19 @@ function DialogComp({open, setOpen, content}) {
               value={product.price}
               onChange={(e) => {
                 setProduct({...product, price: Number(e.target.value)})
+              }}
+            />
+            {/* change */}
+            <TextField
+              required
+              margin="dense"
+              label="old price ($)"
+              type='number'
+              fullWidth
+              variant="standard"
+              value={product.oldPrice}
+              onChange={(e) => {
+                setProduct({...product, oldPrice: Number(e.target.value)})
               }}
             />
             <TextField

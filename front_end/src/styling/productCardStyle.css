@@ -41,10 +41,16 @@
     flex-direction: column;
     justify-content: space-between;
 }
-.card-content span {
+.card-content .prod-price {
     font-size: 22px;
     font-weight: 900;
     color: #6366F1;
+}
+.card-content .old-price {
+    font-size: 18px;
+    color: #555;
+    text-decoration: line-through;
+    margin-left: 10px;
 }
 .card-actions {
     margin-top: 10px;

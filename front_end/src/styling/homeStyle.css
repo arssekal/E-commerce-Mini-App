@@ -1,9 +1,12 @@
 .home {
-    margin-top: 100px;
+    margin-top: 76px;
     margin-bottom: 50px;
 }
-.home .product-header {
+.home-content {
     
+}
+.home .product-header {
+    margin: 0;
 }
 .home .product-header h1 {
     color: black;
@@ -12,6 +15,7 @@
     color: #777;
 }
 .home .products {
+    margin: 0;
     display: grid;
     gap: 20px;
     padding: 0px;
@@ -23,4 +27,24 @@
         align-items: center;
         flex-direction: column;
     }
+}
+
+/* landing page  */
+.hero {
+    
+}
+
+.hero-section {
+    background-color: red;
+    height: calc(100vh - 76px) !important;
+}
+.hero-section button {
+    padding: "12px 24px";
+    background-color: "#ff6600";
+    color: "#fff";
+    border: "none";
+    border-radius: "25px";
+    cursor: "pointer";
+    font-size: "1rem";
+    margin-top: "1rem"
 }

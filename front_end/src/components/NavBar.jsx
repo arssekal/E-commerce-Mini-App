@@ -86,16 +86,26 @@ function NavBar() {
   return (
     <>
     <BasicPopover anchorEl={anchorEl} handleAnchorClose={handleAnchorClose} handleClick={handleClick}/>
-      <AppBar style={{position: "fixed"}}>
+      <AppBar sx={{
+      position: "fixed",
+      background: "linear-gradient(90deg, #4a90e2, #6aa0f0)", // your gradient
+      boxShadow: "0 4px 12px rgba(0,0,0,0.1)", // soft shadow for depth
+      color: "#fff", // ensures text/icons are readable
+      zIndex: (theme) => theme.zIndex.drawer + 1,
+    }}>
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-            onClick={handleClick}
-          >
+        <IconButton
+          size="large"
+          edge="start"
+          color="inherit"
+          aria-label="open drawer"
+          onClick={handleClick}
+          sx={{
+            mr: 2,
+            backgroundColor: "rgba(255,255,255,0.1)", // subtle hover base
+            "&:hover": { backgroundColor: "rgba(255,255,255,0.2)" },
+          }}
+        >
             <MenuIcon />
           </IconButton>
 
@@ -133,6 +143,8 @@ function NavBar() {
 }
 
 export default NavBar
+
+
 function BasicPopover({anchorEl, handleAnchorClose}) {
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;

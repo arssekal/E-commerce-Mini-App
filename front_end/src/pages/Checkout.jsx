@@ -17,6 +17,7 @@ function Checkout() {
     name: "",
     email: "",
     phone: "",
+    status: "pending",
     address: "",
     notes: "Notes are not provided"
   })
@@ -90,16 +91,17 @@ function handleOrder() {
                              isPhoneInvalidCheck(clientInfo.phone)
                              
     if(!clienInfoInValid) {
-        console.log("================")
-        console.log(cartData)
-        console.log(clientInfo)
         localStorage.removeItem("cartData")
-        console.log(makeOrder(clientInfo, cartData))
+        localStorage.removeItem("productsCount")
 
         addOrder(makeOrder(clientInfo, cartData))
 
+        // delete this
+        console.log(makeOrder(clientInfo, cartData))
+
+        setCartData([])
         setProductCount(0)
-        localStorage.removeItem("productsCount")
+
         navigate("/order-success")                        
     } 
 }
@@ -117,6 +119,9 @@ function makeOrder(clinetInformations, cartData) {
     return {
         customerName: clinetInformations.name,
         email: clinetInformations.email,
+        address: clinetInformations.address,
+        phone: clinetInformations.phone,
+        status: clinetInformations.status,
         total: totalPrice,
         orderDate: new Date().toLocaleDateString('en-CA'),
         items: items
@@ -175,7 +180,7 @@ return (
                         onClick={handleOrder}
                         disabled={disabeOrderBtn()}
                         >
-                            Place Order | <span style={{marginLeft: "5px"}}>${totalPrice}</span>
+                            Place Order | <span style={{marginLeft: "5px"}}>${totalPrice.toFixed(2)}</span>
                     </Button>
                 </Box>
             </div>
@@ -186,7 +191,7 @@ return (
                 </div>
                 <div className='total'>
                     <h4>Total</h4>
-                    <span className='total-price'>${totalPrice}</span>
+                    <span className='total-price'>${totalPrice.toFixed(2)}</span>
                 </div>
             </div>
         </div>

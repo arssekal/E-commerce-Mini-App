@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Drawer from '../components/Drawer'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 // css
@@ -6,6 +6,11 @@ import '../styling/adminDashboardStyle.css'
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import Divider from '@mui/material/Divider';
+// dashboars
+import LocalMallIcon from '@mui/icons-material/LocalMall';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import SportsIcon from '@mui/icons-material/Sports';
+import Slider from '@mui/material/Slider';
 // products import
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -20,13 +25,29 @@ import { useProducts } from '../contexts/AllProducts';
 import DialogComp from '../components/DialogComp';
 import ConfirmAlert from '../components/ConfirmAlert';
 import '../App.css'
+// orders import
+import { styled } from '@mui/material/styles';
+import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
+import { listOrders, updateOrderStatus } from '../service/OrderService';
+import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
+import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
+import CircularProgress from '@mui/material/CircularProgress';
+import OrderDetails from '../components/OrderDetails';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+    // menu
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import PendingActionsIcon from '@mui/icons-material/PendingActions'; // pending
+import CropRotateIcon from '@mui/icons-material/CropRotate'; // processing
+import DoneAllIcon from '@mui/icons-material/DoneAll'; // delivered
+
 
 function AdminDashboard() {
-  const [show, setShow] = useState("products")
+  const [show, setShow] = useState("dashboard")
 
   function handleWhatToShow(showThis) {
-    alert("its working")
     setShow(showThis)
+    console.log("what to show is: "+ showThis)
   }
   
   function whatToShow() {
@@ -36,9 +57,10 @@ function AdminDashboard() {
     if(show === "orders") {
       return <Orders/>
     }
-    return <h1>dashboard</h1>
+    return <Dashboard />
 
   }
+
   return (
     <div className='admin-dashboard'>
       <div className='navBar'>
@@ -50,10 +72,10 @@ function AdminDashboard() {
             <p>admin@store.com</p>
           </div>
         </div>
-      </div>
-      <Divider />
+      </div> 
+            
       <div className='container'>
-        {whatToShow()}
+       {whatToShow()}
       </div>
     </div>
   )
@@ -62,7 +84,213 @@ function AdminDashboard() {
 export default AdminDashboard
 
 
-// products
+// ===================== dashboard =======================
+function Dashboard() {
+  const [orders, setOrders] = useState(null)
+  const [totalProducts, setTotalProducts] = useState(0)
+  const [totalRevenue, setTotalRevenue] = useState(0)
+  const [stock, setStock] = useState({inStock: 0, lowStock: 0, outOfStock: 0})
+  const { allProducts } = useProducts();
+  
+  useEffect(() => {
+    listOrders().then((responce) => {
+      setOrders(responce.data)
+    })
+    .catch((err) => console.log(err))
+  }, [setOrders])
+
+  useEffect(() => {
+    if (!allProducts || allProducts.length === 0) return;
+    let inStock = 0, lowStock = 0, outOfStock = 0
+    let total = 0
+    allProducts.map((prod) => {
+      if(prod.stockQuantity === 0) outOfStock += 1
+      else if(prod.stockQuantity <= 10) lowStock += 1
+      else inStock += 1
+      total += 1
+    });
+    setStock({inStock, lowStock, outOfStock})
+    setTotalProducts(total);
+  }, [allProducts]);
+
+  useEffect(() => {
+    if(!orders || orders.length === 0) return;
+
+    const date = new Date(); 
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); 
+    const day = String(date.getDate()).padStart(2, '0');
+    const formatted = `${year}-${month}-${day}`;
+
+    let totalRevenue = 0;
+    orders.forEach(order => {
+      if(formatted.substring(0,7) === order.orderDate.substring(0,7)) {
+        totalRevenue += order.total
+      }
+    });
+    setTotalRevenue(totalRevenue)
+  }, [orders])
+
+
+
+  if (!orders || orders.length === 0) {
+    return (
+      <div className='dashboard'>
+        <div style={{ textAlign: "center", padding: "2rem", display: "flex", justifyContent: "center", alignItems: "center", height: "100vh"}}>
+          <p style={{display: "flex", alignItems: "center", gap: "10px"}}>
+            Loading recent orders <CircularProgress />
+          </p>
+        </div>
+      </div>
+    );
+  }
+  if (!allProducts || allProducts.length === 0) {
+    return (
+      <div className='dashboard'>
+        <div style={{ textAlign: "center", padding: "2rem", display: "flex", justifyContent: "center", alignItems: "center", height: "100vh"}}>
+          <p style={{display: "flex", alignItems: "center", gap: "10px"}}>
+            Loading  <CircularProgress />
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  const DemoPaper = styled(Paper)(({ theme }) => ({
+    padding: theme.spacing(2),
+    ...theme.typography.body2,
+    textAlign: 'center',
+  }));
+
+  let count = 1;
+  const tenRecentOrders = orders.map((row) => {
+    if(count <= 5) {
+      count += 1;
+      return (
+        <TableRow
+          key={row.id}
+          sx={{ '&:last-child td, &:last-child th': { border: 0, height: 80 } }}
+          >
+          <TableCell component="th" scope="row">{row.id}</TableCell>
+          <TableCell align="center">{row.customerName}</TableCell>
+          <TableCell align="right">${row.total}</TableCell>
+          <TableCell align="right">{row.status}</TableCell>
+        </TableRow>
+      )
+    } 
+  })
+
+  function revenueThisMonth() {
+    const date = new Date(); 
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); 
+    const day = String(date.getDate()).padStart(2, '0');
+    const formatted = `${year}-${month}-${day}`;
+    console.log(formatted.substring(0,7))
+    console.log(formatted.substring(0,7) === orders[0].orderDate.substring(0,7))
+
+    let totalRevenue = 0;
+    for(const order of orders) {
+      if(formatted.substring(0,7) === order.orderDate.substring(0,7)) {
+        totalRevenue += order.total
+      }
+    }
+    return totalRevenue
+  }
+
+  return (
+    <div className='dashboard'>
+      <div className='dashboard-header'>
+        <div>
+          <h2>Dashboard</h2>
+          <p>Overview of your e-commerce store performance</p>
+        </div>
+      </div>
+
+      <div className='dashboard-overview'>
+        <DemoPaper variant="outlined" className='card-dashboard'>
+          <div className='info'>
+            <p>Total Products</p>
+            <span>{totalProducts || 0}</span>
+          </div>
+          <div className='icon'>
+            <ArticleOutlinedIcon />
+          </div>
+        </DemoPaper>
+
+        <DemoPaper variant="outlined" className='card-dashboard'>
+          <div className='info'>
+            <p>Total Orders</p>
+            <span>{orders.length || 0}</span>
+          </div>
+          <div className='icon'>
+            <LocalMallIcon />
+          </div>
+        </DemoPaper>
+        
+        <DemoPaper variant="outlined" className='card-dashboard' onClick={revenueThisMonth}>
+          <div className='info'>
+            <p>Revenue This Month</p>
+            <span>${totalRevenue}</span>
+          </div>
+          <div className='icon'>
+            <AttachMoneyIcon />
+          </div>
+        </DemoPaper>
+
+        <DemoPaper variant="outlined" className='card-dashboard'>
+          <div className='info'>
+            <p>Out of Stock</p>
+            <span>{stock.outOfStock}</span>
+          </div>
+          <div className='icon'>
+            <SportsIcon />
+          </div>
+        </DemoPaper>
+      </div>
+      <div className='overview'>
+        <TableContainer component={Paper} className='order-table'>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow style={{backgroundColor: "#eee"}}>
+                <TableCell>Recent Orders</TableCell>
+                <TableCell align="right"></TableCell>
+                <TableCell align="right"></TableCell>
+                <TableCell align="right">View All Orders</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell >Order Id</TableCell>
+                <TableCell align="center">Customer</TableCell>
+                <TableCell align="right">Total</TableCell>
+                <TableCell align="right">status</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {tenRecentOrders}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <div className='inventory-overview'>
+          <h3>Products Overview</h3>
+          <div>
+            <p>In Stock <span>{stock.inStock}</span></p>
+            <Slider defaultValue={70} value={Math.floor((stock.inStock * 100 / totalProducts))} aria-label="Disabled slider"/> 
+          </div>
+          <div>
+            <p>Low Stock <span>{stock.lowStock}</span></p>
+            <Slider defaultValue={35} value={Math.floor((stock.lowStock * 100 / totalProducts))} aria-label="Disabled slider"/>
+          </div>
+          <div>
+            <p>Out of Stock<span>{stock.outOfStock}</span></p>
+            <Slider defaultValue={10} value={Math.floor((stock.outOfStock * 100 / totalProducts))} aria-label="Disabled slider"/>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ===================== products =======================
 function Products() { 
   const { allProducts } = useProducts();
   const [open, setOpen] = useState(false);
@@ -72,6 +300,8 @@ function Products() {
       title: "",
       description: "",
       price: 0,
+      // change
+      oldPrice: 0,
       imageUrl: null,   
       imageFile: null,  
       stockQuantity: 0,
@@ -138,6 +368,18 @@ function Products() {
       {product: product}
     )
   }
+
+  if (!allProducts || allProducts.length === 0) {
+    return (
+      <div className='product-details'>
+        <div style={{ textAlign: "center", padding: "2rem", display: "flex", justifyContent: "center", alignItems: "center", height: "70vh"}}>
+          <p style={{display: "flex", alignItems: "center", gap: "10px"}}>
+            Loading Products <CircularProgress />
+          </p>
+        </div>
+      </div>
+    );
+  }
   
   return (
     <>
@@ -183,7 +425,7 @@ function Products() {
               </TableCell>
               <TableCell align="right">
                 {row.imageUrl && (
-                  <img src={row.imageUrl} alt={row.title} width={80} height={50} style={{backgroundColor: "red"}}/>
+                  <img src={row.imageUrl} alt={row.title} width={80} height={50}/>
                 )}
               </TableCell>
               <TableCell align="right">
@@ -202,9 +444,207 @@ function Products() {
   );
 }
 
-// orders 
+// ===================== orders =======================
 function Orders() {
+  const [orders, setOrders] = useState(null)
+  const [open, setOpen] = useState(false);
+  const [order, setOrder] = useState(null)
+  // const [statusCount, setStatusCount] = useState({pending: 0, processing: 0})
+  // from menu
+  const [anchorEl, setAnchorEl] = useState(null);
+  
+  const DemoPaper = styled(Paper)(({ theme }) => ({
+    padding: theme.spacing(2),
+    ...theme.typography.body2,
+    textAlign: 'center',
+  }));
+
+  useEffect(() => {
+    listOrders().then((responce) => {
+      setOrders(responce.data)
+    })
+    .catch((err) => console.log(err))
+  }, [])
+
+  const [pending, processing, delivered] = useMemo(() => {
+    let pending = 0, processing = 0, delivered = 0;
+    if (orders) {
+      for (let order of orders) {
+        if (order.status === "Pending") pending++;
+        else if (order.status === "Processing") processing++;
+        else if (order.status === "Delivered") delivered++;
+      }
+    }
+    return [pending, processing, delivered];
+  }, [orders]);
+
+  if (!orders || orders.length === 0) {
+    return (
+      <div className='product-details'>
+        <div style={{ textAlign: "center", padding: "2rem", display: "flex", justifyContent: "center", alignItems: "center", height: "70vh"}}>
+          <p style={{display: "flex", alignItems: "center", gap: "10px"}}>
+            Loading orders details<CircularProgress />
+          </p>
+        </div>
+      </div>
+    );
+  }
+  
+  function viewOrderDetails(row) {
+    // alert("details")
+    setOpen(true)
+    setOrder(row)
+    console.log(row)
+  }
+
+
+  // menu more
+  const openMenu = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  function handleUpdateStatusCLick(row) {
+    setOrder(row)
+  }
+  function handleStatusCLick(status) {
+    updateOrderStatus(order.id, status)
+    .then((response) => {
+      setOrders(prevOrders =>
+        prevOrders.map(o =>
+            o.id === order.id ? response.data : o
+        )
+    );
+    })
+    .catch((error) => console.error(error))
+  }
+
   return (
-    <h1>orders</h1>
+    <>
+    <OrderDetails open={open} setOpen={setOpen} order={order}/>
+    <div className='orders'>
+      <div className='order-header'>
+        <div>
+          <h2>Orders</h2>
+          <p>View and manage customer orders</p>
+        </div>
+      </div>
+
+      <div className='orders-overview'>
+        <DemoPaper variant="outlined" className='card-order'>
+          <div className='info'>
+            <p>Total Orders</p>
+            <span>{orders.length || 0}</span>
+          </div>
+          <div className='icon'>
+            <ArticleOutlinedIcon />
+          </div>
+        </DemoPaper>
+
+        <DemoPaper variant="outlined" className='card-order'>
+          <div className='info'>
+            <p>Pending</p>
+            <span>{pending}</span>
+          </div>
+          <div className='icon'>
+            <ArticleOutlinedIcon />
+          </div>
+        </DemoPaper>
+        
+        <DemoPaper variant="outlined" className='card-order'>
+          <div className='info'>
+            <p>Processing</p>
+            <span>{processing}</span>
+          </div>
+          <div className='icon'>
+            <ArticleOutlinedIcon />
+          </div>
+        </DemoPaper>
+
+        <DemoPaper variant="outlined" className='card-order'>
+          <div className='info'>
+            <p>Delivered</p>
+            <span>{delivered}</span>
+          </div>
+          <div className='icon'>
+            <ArticleOutlinedIcon />
+          </div>
+        </DemoPaper>
+      </div>
+      <TableContainer component={Paper} className='order-table'>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow style={{backgroundColor: "#eee"}}>
+              <TableCell>Order Id</TableCell>
+              <TableCell align="center">Customer</TableCell>
+              <TableCell align="right">Date</TableCell>
+              <TableCell align="right">Items</TableCell>
+              <TableCell align="right">Total</TableCell>
+              <TableCell align="right">Status</TableCell>
+              <TableCell align="right">Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {[...orders].reverse().map((row) => (
+              <TableRow
+                key={row.id}
+                sx={{ '&:last-child td, &:last-child th': { border: 0, height: 80 } }}
+                >
+                <TableCell component="th" scope="row">{row.id}</TableCell>
+                <TableCell align="center">{row.customerName}</TableCell>
+                <TableCell align="right">{row.orderDate}</TableCell>
+                <TableCell align="right">{row.items.length}</TableCell>
+                <TableCell align="right">${row.total}</TableCell>
+                <TableCell align="right">{row.status || "not provided"}</TableCell>
+                <TableCell align="center">
+                  <div className='actions'>
+                    <MoreHorizIcon className='more' onClick={(e) => {
+                      handleClick(e)
+                      handleUpdateStatusCLick(row)
+                    }}/>
+                    <RemoveRedEyeOutlinedIcon className='view' onClick={() => viewOrderDetails(row)}/>
+                    <FileDownloadOutlinedIcon className='download' />
+                  </div>
+                  <Menu
+  className="menu"
+  id="basic-menu"
+  anchorEl={anchorEl}
+  open={openMenu}
+  onClose={handleClose}
+  slotProps={{
+    paper: {
+      sx: {
+        boxShadow: "none", // softer shadow
+        border: "1px solid #e0e0e0",                // subtle border
+        borderRadius: "10px",                       // rounded corners
+        minWidth: "140px",                          // better width
+        padding: "0",                           // compact spacing
+        backgroundColor: "#fff",                    // clean white background
+      },
+    },
+    list: {
+      'aria-labelledby': 'basic-button',
+      sx: {
+        padding: 0, // remove extra padding around items
+      },
+    },
+  }}
+>
+
+                    <MenuItem style={{backgroundColor: row.status === "Pending" ? "#eee" : null}} onClick={(e) => {handleClose(e); handleStatusCLick("Pending")}} className='menu-item'><PendingActionsIcon className='icon'/>Pending</MenuItem>
+                    <MenuItem style={{backgroundColor: row.status === "Processing" ? "#eee" : null}} onClick={(e) => {handleClose(e); handleStatusCLick("Processing")}} className='menu-item'><CropRotateIcon className='icon'/>Processing</MenuItem>
+                    <MenuItem style={{backgroundColor: row.status === "Processing" ? "#eee" : null}} onClick={(e) => {handleClose(e); handleStatusCLick("Delivered")}} className='menu-item'><DoneAllIcon className='icon'/>Delivered</MenuItem>
+                  </Menu>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      
+    </div>
+    </>
   )
 }

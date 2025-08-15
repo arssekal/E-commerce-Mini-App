@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.arssekal.backend.dto.OrderDto;
@@ -42,7 +44,11 @@ public class OrderController {
         List<OrderDto> orders = orderService.getAllOrders();
         return ResponseEntity.ok(orders);
     }
-
+    @PutMapping("/{id}")
+    public ResponseEntity<OrderDto> updateOrderStatus(@PathVariable Long id, @RequestParam String status) {
+        OrderDto order = orderService.updateOrderStatus(id, status);
+        return ResponseEntity.ok(order);
+    }
     
     @DeleteMapping("/{id}")
     public ResponseEntity<OrderDto> deletePrduct(@PathVariable Long id) {

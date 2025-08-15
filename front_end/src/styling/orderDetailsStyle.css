@@ -1,0 +1,53 @@
+.order-details .order-id {
+    margin-bottom: 20px;
+    color: black;
+}
+.order-details .customer-infos {
+    margin-bottom: 30px;
+}
+.order-details .customer-infos h2 {
+    color: black;
+    margin-bottom: 10px;
+}
+.order-details .customer-infos .infos {
+    margin-left: 20px;
+}
+.customer-infos .infos p {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.customer-infos .infos p:first-child .icon {
+    color: blue;
+}
+.customer-infos .infos p:nth-child(2) .icon {
+    color: orange;
+}
+.customer-infos .infos p:nth-child(3) .icon {
+    color: blueviolet;
+}
+.customer-infos .infos p:last-child .icon {
+    color: green;
+}
+.order-details .order-items {
+    margin: 20px 0;
+}
+.order-details .order-items h3 {
+    color: black;
+    margin-bottom: 20px;
+}
+
+.order-details .order-summmary {
+    display: flex;
+    justify-content:  space-between;
+    align-items: center;
+}
+.order-details .order-summmary h3 {
+    color: black;
+}
+.order-details .order-summmary span {
+    color: blue;
+    font-weight: 600;
+    font-size: 20px;
+}

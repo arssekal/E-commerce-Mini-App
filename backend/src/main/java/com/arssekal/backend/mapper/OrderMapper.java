@@ -17,6 +17,10 @@ public class OrderMapper {
             orderDto.getId(),
             orderDto.getCustomerName(),
             orderDto.getEmail(),
+            orderDto.getAddress(),
+            orderDto.getPhone(),
+            // change
+            orderDto.getStatus(),
             orderDto.getTotal(),
             orderDto.getOrderDate(),
             orderItems
@@ -31,6 +35,10 @@ public class OrderMapper {
             order.getId(),
             order.getCustomerName(),
             order.getEmail(),
+            order.getAddress(),
+            order.getPhone(),
+            // change
+            order.getStatus(),
             order.getTotal(),
             order.getOrderDate(),
             orderItems

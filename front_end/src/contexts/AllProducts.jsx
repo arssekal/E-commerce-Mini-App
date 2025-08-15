@@ -71,6 +71,7 @@ export const useProducts = () => {
 
 export default function AllProductProvider({ children }) {
   const [allProducts, setAllProducts] = useState([]);
+  
   useEffect(() => {
     listProducts().then(response => {
       setAllProducts(response.data); 

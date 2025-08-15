@@ -50,7 +50,7 @@ function ProductCard({product}) {
         ]
       ))
     }
-    
+    console.log("product: "+ product.oldPrice)
     setOpen(() => false)
     setOpen(() => true)
   }
@@ -70,7 +70,7 @@ function ProductCard({product}) {
       <CardContent className='card-content'>
         <Typography gutterBottom variant="h5" component="div">
          {product.title}
-         <span style={{display: "block", marginTop: "10px"}}>${product.price}</span>
+         <div style={{display: "block", marginTop: "10px"}}><span className='prod-price'>${product.price}</span> <span className='old-price'>${product.oldPrice || 66}</span></div>
         </Typography>
         <div className='card-actions'>
           <Link to={"/product/"+product.id}>

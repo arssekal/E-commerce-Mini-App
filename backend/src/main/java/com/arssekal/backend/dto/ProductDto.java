@@ -15,6 +15,8 @@ public class ProductDto {
     private String title;
     private String description;
     private double price;
+    // change
+    private double oldPrice;
     private String imageUrl;
     private Long stockQuantity;
 }

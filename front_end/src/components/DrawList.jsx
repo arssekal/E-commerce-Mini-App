@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import Button from '@mui/material/Button';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
@@ -13,6 +12,10 @@ import InventoryIcon from '@mui/icons-material/Inventory';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import Box from '@mui/material/Box';
 import DialogComp from './DialogComp';
+import LogoutIcon from '@mui/icons-material/Logout';
+// css
+import "../styling/adminDashboardStyle.css"
+import { Link } from 'react-router-dom';
 
 
 
@@ -23,6 +26,8 @@ function DrawList({toggleDrawer, handleWhatToShow}) {
         title: "",
         description: "",
         price: 0,
+        // change,
+        oldPrice: 0,
         imageUrl: null,   
         imageFile: null,  
         stockQuantity: 0,
@@ -35,10 +40,21 @@ function DrawList({toggleDrawer, handleWhatToShow}) {
       {...dialogContent, title: "Add Product", description: "Enter the details of the new Product"}
     )
   };
+  
   return (
     <>
-    <DialogComp open={open} setOpen={setOpen} content={dialogContent} />
-    <Box sx={{ width: 250 }} role="presentation"  onClick={() => toggleDrawer(false)}>
+    <DialogComp open={open} setOpen={setOpen} content={dialogContent}/>
+    <Box sx={{ 
+      width: 250, 
+      display: "flex", 
+      flexDirection: "column", 
+      justifyContent: "space-between", 
+      height: "100%",
+      background: "linear-gradient(90deg, #a0e6dc, #c7f8e0)"
+    }} role="presentation"  
+    onClick={() => toggleDrawer(false)}
+    >
+      <div>
       <List style={{marginLeft: "15px"}}>
         <h2>Admin Panel</h2>
         <p>E-commerce Store</p>
@@ -46,8 +62,13 @@ function DrawList({toggleDrawer, handleWhatToShow}) {
       <Divider />
       <List>
 
-        <ListItem disablePadding>
-            <ListItemButton>
+        <ListItem disablePadding onClick={() => {
+            handleWhatToShow("dashboard")
+        }}>
+            <ListItemButton sx={{ 
+              "&:hover": { backgroundColor: "rgba(84, 252, 148, 0.45)" }, // light green hover
+              "&.Mui-selected": { backgroundColor: "rgba(56, 239, 125, 0.2)", color: "#11998e" }
+            }} >
                 <ListItemIcon>
                     <HomeFilledIcon />
                 </ListItemIcon>
@@ -58,7 +79,10 @@ function DrawList({toggleDrawer, handleWhatToShow}) {
         <ListItem disablePadding onClick={() => {
             handleWhatToShow("products")
         }}>
-            <ListItemButton>
+            <ListItemButton sx={{ 
+              "&:hover": { backgroundColor: "rgba(84, 252, 148, 0.45)" }, // light green hover
+              "&.Mui-selected": { backgroundColor: "rgba(56, 239, 125, 0.2)", color: "#11998e" }
+            }} >
                 <ListItemIcon>
                     <ViewInArIcon/>
                 </ListItemIcon>
@@ -69,7 +93,10 @@ function DrawList({toggleDrawer, handleWhatToShow}) {
         <ListItem disablePadding onClick={() => {
             handleWhatToShow("orders")
         }}>
-            <ListItemButton>
+            <ListItemButton sx={{ 
+              "&:hover": { backgroundColor: "rgba(84, 252, 148, 0.45)" }, // light green hover
+              "&.Mui-selected": { backgroundColor: "rgba(56, 239, 125, 0.2)", color: "#11998e" }
+            }} >
                 <ListItemIcon>
                     <InventoryIcon/>
                 </ListItemIcon>
@@ -78,9 +105,12 @@ function DrawList({toggleDrawer, handleWhatToShow}) {
         </ListItem>
 
         <ListItem disablePadding onClick={() => {
-            handleClickOpen()
+          handleClickOpen()
         }}>
-            <ListItemButton>
+            <ListItemButton sx={{ 
+              "&:hover": { backgroundColor: "rgba(84, 252, 148, 0.45)" }, // light green hover
+              "&.Mui-selected": { backgroundColor: "rgba(56, 239, 125, 0.2)", color: "#11998e" }
+            }} >
                 <ListItemIcon>
                     <AddBoxIcon/>
                 </ListItemIcon>
@@ -88,6 +118,18 @@ function DrawList({toggleDrawer, handleWhatToShow}) {
             </ListItemButton>
         </ListItem>
       </List>
+      </div>
+      <div>
+      <Divider />
+      <List style={{marginLeft: "15px", padding: "20px 0px"}}>
+        <Link to={'/'}>
+        <div className='admin-logout'>
+          <LogoutIcon />
+          <span>Log Out</span>
+        </div>
+        </Link>
+      </List>
+      </div>
     </Box>
     </>
   )

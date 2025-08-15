@@ -29,6 +29,9 @@ public class OrderServiceImpl implements OrderService {
         order.setEmail(orderDto.getEmail());
         order.setTotal(orderDto.getTotal());
         order.setOrderDate(orderDto.getOrderDate());
+        order.setAddress(orderDto.getAddress());
+        order.setPhone(orderDto.getPhone());
+        order.setStatus(orderDto.getStatus());
 
         List<OrderItem> items = orderDto.getItems().stream()
             .map(itemDto -> {
@@ -48,6 +51,15 @@ public class OrderServiceImpl implements OrderService {
         order.setItems(items);
 
         return OrderMapper.mapToOrderDto(orderRepository.save(order)); // Cascade saves all items
+    }
+    @Override
+    public OrderDto updateOrderStatus(Long id, String status) {
+        Order order = orderRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Order not found"));
+                    
+        order.setStatus(status);
+        Order savedOrder =  orderRepository.save(order);
+        return OrderMapper.mapToOrderDto(savedOrder);
     }
     
     @Override

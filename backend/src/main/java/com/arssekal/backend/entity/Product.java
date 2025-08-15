@@ -28,6 +28,7 @@ public class Product {
     private String title;
     private String description;
     private double price;
+    private double oldPrice;
     private String imageUrl;
     private Long stockQuantity;
 }

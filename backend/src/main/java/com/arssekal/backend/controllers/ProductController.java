@@ -2,8 +2,6 @@ package com.arssekal.backend.controllers;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,15 +14,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.arssekal.backend.dto.ProductDto;
-import com.arssekal.backend.entity.Product;
-import com.arssekal.backend.mapper.ProductMapper;
 import com.arssekal.backend.services.ProductService;
 import lombok.AllArgsConstructor;
 
@@ -89,6 +84,8 @@ public class ProductController {
         @RequestParam("title") String title,
         @RequestParam("description") String description,
         @RequestParam("price") double price,
+        // chnage
+        @RequestParam("oldPrice") double oldPrice,
         @RequestParam("stockQuantity") Long stockQuantity,
         @RequestParam("image") MultipartFile imageFile,
         @RequestParam("id") Long id
@@ -104,6 +101,8 @@ public class ProductController {
         product.setTitle(title);
         product.setDescription(description);
         product.setPrice(price);
+        // chnage
+        product.setOldPrice(oldPrice);
         product.setStockQuantity(stockQuantity);
         product.setImageUrl("/images/" + filename);
 

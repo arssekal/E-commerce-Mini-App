@@ -1,6 +1,10 @@
 * {
   margin: 0;
   box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+.body, html {
+  overflow-x: hidden;
 }
 .app {
   background-color: white;
@@ -9,6 +13,7 @@
 .container {
   padding: 0 40px;
   width: 100%;
+  position: relative;
 }
 @media (max-width: 600px) {
   .container {

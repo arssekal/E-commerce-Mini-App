@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 // style
 import '../styling/productDetailStyle.css'
 // materila ui
@@ -12,6 +12,8 @@ import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { useCartData } from '../contexts/CartContext';
 import { useProducts } from '../contexts/AllProducts';
 import { useAlert } from '../contexts/AlertContext'
+//
+import CircularProgress from '@mui/material/CircularProgress';
 
 function ProductDetail() {
   const {setOpen} = useAlert()
@@ -78,7 +80,11 @@ function ProductDetail() {
   if (!allProducts || allProducts.length === 0) {
     return (
       <div className='product-details'>
-        <p style={{ textAlign: "center", padding: "2rem" }}>Loading product details...</p>
+        <div style={{ textAlign: "center", padding: "2rem", display: "flex", justifyContent: "center", alignItems: "center"}}>
+          <p style={{display: "flex", alignItems: "center", gap: "10px"}}>
+          Loading product details<CircularProgress />
+          </p>
+        </div>
       </div>
     );
   }
