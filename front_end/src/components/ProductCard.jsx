@@ -15,8 +15,8 @@ import { useAlert } from '../contexts/AlertContext'
  
 
 function ProductCard({product}) {
-  const {cartData, setCartData, setProductCount, productCount} = useCartData();
-  const {setOpen} = useAlert()
+  const { cartData, setCartData, setProductCount, productCount } = useCartData();
+  const { showAlert } = useAlert()
 
   function handleAddToCartCLick() {
     let alreadyAdded = false
@@ -51,8 +51,8 @@ function ProductCard({product}) {
       ))
     }
     console.log("product: "+ product.oldPrice)
-    setOpen(() => false)
-    setOpen(() => true)
+
+    showAlert('Product added to cart!', 'success');
   }
 
   return (

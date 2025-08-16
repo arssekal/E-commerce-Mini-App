@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import CartProvider from './contexts/CartContext.jsx';
 import AllProductProvider from './contexts/AllProducts.jsx';
 import AlertProvider from './contexts/AlertContext.jsx';
+import { SnackbarProvider } from 'notistack';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -13,9 +14,11 @@ createRoot(document.getElementById('root')).render(
     <AllProductProvider>
       {/* cart context provider */}
       <CartProvider> 
-        <AlertProvider>
-          <App />
-        </AlertProvider>
+        <SnackbarProvider maxSnack={3} autoHideDuration={2000}>
+          <AlertProvider>
+            <App />
+          </AlertProvider>
+        </SnackbarProvider>
       </CartProvider>
       {/* cart context provider */}
     </AllProductProvider>

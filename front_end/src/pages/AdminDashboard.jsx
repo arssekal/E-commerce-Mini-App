@@ -11,6 +11,7 @@ import LocalMallIcon from '@mui/icons-material/LocalMall';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import SportsIcon from '@mui/icons-material/Sports';
 import Slider from '@mui/material/Slider';
+import { motion } from "motion/react"
 // products import
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -163,7 +164,7 @@ function Dashboard() {
   }));
 
   let count = 1;
-  const tenRecentOrders = orders.map((row) => {
+  const tenRecentOrders = [...orders].reverse().map((row) => {
     if(count <= 5) {
       count += 1;
       return (
@@ -208,45 +209,69 @@ function Dashboard() {
       </div>
 
       <div className='dashboard-overview'>
-        <DemoPaper variant="outlined" className='card-dashboard'>
-          <div className='info'>
-            <p>Total Products</p>
-            <span>{totalProducts || 0}</span>
-          </div>
-          <div className='icon'>
-            <ArticleOutlinedIcon />
-          </div>
-        </DemoPaper>
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1 * 0.2, duration: 0.6, ease: "easeOut" }}
+        >
+          <DemoPaper variant="outlined" className='card-dashboard'>
+            <div className='info'>
+              <p>Total Products</p>
+              <span>{totalProducts || 0}</span>
+            </div>
+            <div className='icon'>
+              <ArticleOutlinedIcon />
+            </div>
+          </DemoPaper>
+        </motion.div>
 
-        <DemoPaper variant="outlined" className='card-dashboard'>
-          <div className='info'>
-            <p>Total Orders</p>
-            <span>{orders.length || 0}</span>
-          </div>
-          <div className='icon'>
-            <LocalMallIcon />
-          </div>
-        </DemoPaper>
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 2 * 0.2, duration: 0.6, ease: "easeOut" }}
+        >
+          <DemoPaper variant="outlined" className='card-dashboard'>
+            <div className='info'>
+              <p>Total Orders</p>
+              <span>{orders.length || 0}</span>
+            </div>
+            <div className='icon'>
+              <LocalMallIcon />
+            </div>
+          </DemoPaper>
+        </motion.div>
         
-        <DemoPaper variant="outlined" className='card-dashboard' onClick={revenueThisMonth}>
-          <div className='info'>
-            <p>Revenue This Month</p>
-            <span>${totalRevenue}</span>
-          </div>
-          <div className='icon'>
-            <AttachMoneyIcon />
-          </div>
-        </DemoPaper>
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 3 * 0.2, duration: 0.6, ease: "easeOut" }}
+        >
+          <DemoPaper variant="outlined" className='card-dashboard' onClick={revenueThisMonth}>
+            <div className='info'>
+              <p>Revenue This Month</p>
+              <span>${totalRevenue}</span>
+            </div>
+            <div className='icon'>
+              <AttachMoneyIcon />
+            </div>
+          </DemoPaper>
+        </motion.div>
 
-        <DemoPaper variant="outlined" className='card-dashboard'>
-          <div className='info'>
-            <p>Out of Stock</p>
-            <span>{stock.outOfStock}</span>
-          </div>
-          <div className='icon'>
-            <SportsIcon />
-          </div>
-        </DemoPaper>
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 4 * 0.2, duration: 0.6, ease: "easeOut" }}
+        >
+          <DemoPaper variant="outlined" className='card-dashboard'>
+            <div className='info'>
+              <p>Out of Stock</p>
+              <span>{stock.outOfStock}</span>
+            </div>
+            <div className='icon'>
+              <SportsIcon />
+            </div>
+          </DemoPaper>
+        </motion.div>
       </div>
       <div className='overview'>
         <TableContainer component={Paper} className='order-table'>
@@ -270,20 +295,62 @@ function Dashboard() {
             </TableBody>
           </Table>
         </TableContainer>
-        <div className='inventory-overview'>
+        <div className="inventory-overview">
           <h3>Products Overview</h3>
-          <div>
-            <p>In Stock <span>{stock.inStock}</span></p>
-            <Slider defaultValue={70} value={Math.floor((stock.inStock * 100 / totalProducts))} aria-label="Disabled slider"/> 
-          </div>
-          <div>
-            <p>Low Stock <span>{stock.lowStock}</span></p>
-            <Slider defaultValue={35} value={Math.floor((stock.lowStock * 100 / totalProducts))} aria-label="Disabled slider"/>
-          </div>
-          <div>
-            <p>Out of Stock<span>{stock.outOfStock}</span></p>
-            <Slider defaultValue={10} value={Math.floor((stock.outOfStock * 100 / totalProducts))} aria-label="Disabled slider"/>
-          </div>
+
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div>
+              <p>
+                In Stock <span>{Math.floor((stock.inStock * 100) / totalProducts)}%</span>
+              </p>
+              <span>{stock.inStock}</span>
+            </div>
+            <Slider
+              defaultValue={70}
+              value={Math.floor((stock.inStock * 100) / totalProducts)}
+              aria-label="Disabled slider"
+            />
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <div>
+              <p>
+                Low Stock <span>{Math.round((stock.lowStock * 100) / totalProducts)}%</span>
+              </p>
+              <span>{stock.lowStock}</span>
+            </div>
+            <Slider
+              defaultValue={35}
+              value={Math.round((stock.lowStock * 100) / totalProducts)}
+              aria-label="Disabled slider"
+            />
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            <div>
+              <p>
+              Out of Stock <span>{Math.round((stock.outOfStock * 100) / totalProducts)}%</span>
+              </p>
+              <span>{stock.outOfStock}</span>
+            </div>
+            <Slider
+              defaultValue={10}
+              value={Math.floor((stock.outOfStock * 100) / totalProducts)}
+              aria-label="Disabled slider"
+            />
+          </motion.div>
         </div>
       </div>
     </div>
@@ -521,6 +588,22 @@ function Orders() {
     .catch((error) => console.error(error))
   }
 
+  function statusStyle(status) {
+    if(status === "Pending") {
+      return {
+        backgroundColor: "#5090f7"
+      }
+    }
+    if(status === "Processing") {
+      return {
+        backgroundColor: "#fa8c3d"
+      }
+    }
+    return  {
+      backgroundColor: "#38fd80"
+    }
+  }
+
   return (
     <>
     <OrderDetails open={open} setOpen={setOpen} order={order}/>
@@ -532,7 +615,7 @@ function Orders() {
         </div>
       </div>
 
-      <div className='orders-overview'>
+      {/* <div className='orders-overview'>
         <DemoPaper variant="outlined" className='card-order'>
           <div className='info'>
             <p>Total Orders</p>
@@ -572,7 +655,11 @@ function Orders() {
             <ArticleOutlinedIcon />
           </div>
         </DemoPaper>
-      </div>
+      </div> */}
+
+      <OrdersOverview orders={orders} pending={pending} processing={processing} delivered={delivered}/>
+
+
       <TableContainer component={Paper} className='order-table'>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -582,7 +669,7 @@ function Orders() {
               <TableCell align="right">Date</TableCell>
               <TableCell align="right">Items</TableCell>
               <TableCell align="right">Total</TableCell>
-              <TableCell align="right">Status</TableCell>
+              <TableCell align="center">Status</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -597,7 +684,7 @@ function Orders() {
                 <TableCell align="right">{row.orderDate}</TableCell>
                 <TableCell align="right">{row.items.length}</TableCell>
                 <TableCell align="right">${row.total}</TableCell>
-                <TableCell align="right">{row.status || "not provided"}</TableCell>
+                <TableCell align="right" className='status-cell'><span className='status' style={statusStyle(row.status)}>{row.status}</span></TableCell>
                 <TableCell align="center">
                   <div className='actions'>
                     <MoreHorizIcon className='more' onClick={(e) => {
@@ -608,34 +695,34 @@ function Orders() {
                     <FileDownloadOutlinedIcon className='download' />
                   </div>
                   <Menu
-  className="menu"
-  id="basic-menu"
-  anchorEl={anchorEl}
-  open={openMenu}
-  onClose={handleClose}
-  slotProps={{
-    paper: {
-      sx: {
-        boxShadow: "none", // softer shadow
-        border: "1px solid #e0e0e0",                // subtle border
-        borderRadius: "10px",                       // rounded corners
-        minWidth: "140px",                          // better width
-        padding: "0",                           // compact spacing
-        backgroundColor: "#fff",                    // clean white background
-      },
-    },
-    list: {
-      'aria-labelledby': 'basic-button',
-      sx: {
-        padding: 0, // remove extra padding around items
-      },
-    },
-  }}
->
+                    className="menu"
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={openMenu}
+                    onClose={handleClose}
+                    slotProps={{
+                      paper: {
+                        sx: {
+                          boxShadow: "none", 
+                          border: "1px solid #e0e0e0",                
+                          borderRadius: "10px",                       
+                          minWidth: "140px",                          
+                          padding: "0",                        
+                          backgroundColor: "#fff", 
+                        },
+                      },
+                      list: {
+                        'aria-labelledby': 'basic-button',
+                        sx: {
+                          padding: 0, 
+                        },
+                      },
+                    }}
+                  >
 
-                    <MenuItem style={{backgroundColor: row.status === "Pending" ? "#eee" : null}} onClick={(e) => {handleClose(e); handleStatusCLick("Pending")}} className='menu-item'><PendingActionsIcon className='icon'/>Pending</MenuItem>
-                    <MenuItem style={{backgroundColor: row.status === "Processing" ? "#eee" : null}} onClick={(e) => {handleClose(e); handleStatusCLick("Processing")}} className='menu-item'><CropRotateIcon className='icon'/>Processing</MenuItem>
-                    <MenuItem style={{backgroundColor: row.status === "Processing" ? "#eee" : null}} onClick={(e) => {handleClose(e); handleStatusCLick("Delivered")}} className='menu-item'><DoneAllIcon className='icon'/>Delivered</MenuItem>
+                    <MenuItem onClick={(e) => {handleClose(e); handleStatusCLick("Pending")}} className='menu-item'><PendingActionsIcon className='icon'/>Pending</MenuItem>
+                    <MenuItem onClick={(e) => {handleClose(e); handleStatusCLick("Processing")}} className='menu-item'><CropRotateIcon className='icon'/>Processing</MenuItem>
+                    <MenuItem onClick={(e) => {handleClose(e); handleStatusCLick("Delivered")}} className='menu-item'><DoneAllIcon className='icon'/>Delivered</MenuItem>
                   </Menu>
                 </TableCell>
               </TableRow>
@@ -647,4 +734,77 @@ function Orders() {
     </div>
     </>
   )
+}
+
+
+
+// helper for number counting animation
+const Counter = ({ target }) => {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let start = 0;
+    const end = target;
+    if (start === end) return;
+
+    let totalMilSecDur = 1000;
+    let incrementTime = 20;
+    let step = Math.ceil((end - start) / (totalMilSecDur / incrementTime));
+
+    let timer = setInterval(() => {
+      start += step;
+      if (start >= end) {
+        clearInterval(timer);
+        setCount(end);
+      } else {
+        setCount(start);
+      }
+    }, incrementTime);
+
+    return () => clearInterval(timer);
+  }, [target]);
+
+  return <span>{count}</span>;
+};
+
+function OrdersOverview({ orders, pending, processing, delivered }) {
+  const cardVariants = {
+    hidden: { opacity: 0, y: 30, scale: 0.95 },
+    visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: { delay: i * 0.2, duration: 0.6, ease: "easeOut" },
+    }),
+  };
+
+  const items = [
+    { label: "Total Orders", value: orders.length || 0 },
+    { label: "Pending", value: pending },
+    { label: "Processing", value: processing },
+    { label: "Delivered", value: delivered },
+  ];
+
+  return (
+    <div className="orders-overview">
+      {items.map((item, i) => (
+        <motion.div
+          key={i}
+          className="card-order"
+          custom={i}
+          variants={cardVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <div className="info">
+            <p>{item.label}</p>
+            <Counter target={item.value} />
+          </div>
+          <div className="icon">
+            <ArticleOutlinedIcon />
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  );
 }

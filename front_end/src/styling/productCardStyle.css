@@ -1,8 +1,10 @@
 .card {
+    width: 250px; 
     max-width: 345px; 
     margin-top: 60px;
-    padding: 20px;
-    border: 1px solid #d7ccc8;
+    box-shadow: 0 5px 10px #eee;
+}
+.card:hover {
 }
 .image-item {
     object-fit: cover;

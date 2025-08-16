@@ -1,7 +1,6 @@
 // MainLayout.jsx
 import { Routes, Route } from 'react-router-dom';
 import NavBar from '../components/NavBar';
-import Snackbar from '../components/Snackbar';
 import Home from '../pages/Home';
 import Cart from '../pages/Cart';
 import ProductDetail from '../pages/ProductDetail';
@@ -11,7 +10,6 @@ import OrderSuccess from '../pages/OrderSuccess';
 function MainLayout() {
   return (
     <div className='container'>
-      <Snackbar isOpen={true} />
       <NavBar />
       <Routes>
         <Route path='/' element={<Home />} />

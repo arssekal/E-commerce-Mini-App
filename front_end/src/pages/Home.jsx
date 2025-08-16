@@ -33,10 +33,10 @@ function Home() {
         </div>
 
         <div className='home-content' id='products'>
-          <div className='product-header'>
+          {/* <div className='product-header'>
             <h1>Featured Products</h1>
             <p>Discover our latest collection of amazing products</p>
-          </div>
+          </div> */}
           <div className='products'>
             {listProducts}
           </div>
@@ -48,7 +48,6 @@ function Home() {
 export default Home
 
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import { Link } from 'react-router-dom';
 
 const HeroSection = () => {
   return (
@@ -73,17 +72,16 @@ const HeroSection = () => {
       <h1>Welcome to Our Store</h1>
       <p>Discover the best products selected for you</p>
       <a href="#products">
-
-      <button style={{
-        padding: "12px 24px",
-        backgroundColor: "#ff6600",
-        color: "#fff",
-        border: "none",
-        borderRadius: "25px",
-        cursor: "pointer",
-        fontSize: "1rem",
-        marginTop: "1rem"
-      }}>Shop Now</button>
+        <button style={{
+          padding: "12px 24px",
+          backgroundColor: "#ff6600",
+          color: "#fff",
+          border: "none",
+          borderRadius: "25px",
+          cursor: "pointer",
+          fontSize: "1rem",
+          marginTop: "1rem"
+        }}>Shop Now</button>
       </a>
     </div>
   );
