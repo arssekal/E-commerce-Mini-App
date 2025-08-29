@@ -10,4 +10,5 @@ public interface OrderService {
     OrderDto updateOrderStatus(Long id, String status);
     List<OrderDto> getAllOrders();
     OrderDto deleteOrder(Long id);
+    void markOrdersAsSeen();
 }

@@ -14,12 +14,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.arssekal.backend.dto.ProductDto;
+import com.arssekal.backend.dto.SoldItemDTO;
 import com.arssekal.backend.services.ProductService;
 import lombok.AllArgsConstructor;
 
@@ -30,11 +32,6 @@ import lombok.AllArgsConstructor;
 public class ProductController {
     private ProductService productService;
 
-    // @PostMapping("/")
-    // public ResponseEntity<ProductDto> addProduct(@RequestBody ProductDto productDto) {
-    //     ProductDto addedProduct = productService.addProduct(productDto);
-    //     return new ResponseEntity<>(addedProduct, HttpStatus.CREATED);
-    // }
     @PostMapping(value = "/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProductDto> addProduct(
         @RequestParam("title") String title,
@@ -114,5 +111,11 @@ public class ProductController {
     public ResponseEntity<ProductDto> deletePrduct(@PathVariable Long id) {
         ProductDto deletedProduct = productService.deleteProduct(id);
         return ResponseEntity.ok(deletedProduct);
+    }
+
+    @PutMapping("/update-stock")
+    public ResponseEntity<String> updateStockQuantity(@RequestBody List<SoldItemDTO> soldItems) {
+        productService.updateStockQuantity(soldItems);
+        return  ResponseEntity.ok("Stock updated successfully");
     }
 }

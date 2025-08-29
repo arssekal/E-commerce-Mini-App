@@ -44,6 +44,7 @@ public class OrderController {
         List<OrderDto> orders = orderService.getAllOrders();
         return ResponseEntity.ok(orders);
     }
+    // update order's status
     @PutMapping("/{id}")
     public ResponseEntity<OrderDto> updateOrderStatus(@PathVariable Long id, @RequestParam String status) {
         OrderDto order = orderService.updateOrderStatus(id, status);
@@ -56,4 +57,9 @@ public class OrderController {
         return ResponseEntity.ok(deletedOrder);
     }
 
+    @PutMapping("/order-seens")
+    public String markOrdersAsSeen() {
+        orderService.markOrdersAsSeen();
+        return "orders are  maked as seen";
+    }
 }

@@ -3,6 +3,8 @@ package com.arssekal.backend.dto;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +23,10 @@ public class OrderDto {
     private String phone;
     // change
     private String status;
-    private Long total;
+    private double total;
     private LocalDate orderDate;
+    @JsonProperty("isSeen") 
+    private boolean isSeen;
+    
     private List<OrderItemDto> items;
 }

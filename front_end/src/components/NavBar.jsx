@@ -17,6 +17,7 @@ import { Link } from 'react-router-dom';
 // propover
 import Popover from '@mui/material/Popover';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import Button from '@mui/material/Button';
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -88,11 +89,11 @@ function NavBar() {
     <BasicPopover anchorEl={anchorEl} handleAnchorClose={handleAnchorClose} handleClick={handleClick}/>
       <AppBar sx={{
       position: "fixed",
-      background: "linear-gradient(90deg, #4a90e2, #6aa0f0)", // your gradient
+      background: "linear-gradient(90deg,rgb(31, 7, 139),rgb(1, 101, 250))", // your gradient
       boxShadow: "0 4px 12px rgba(0,0,0,0.1)", // soft shadow for depth
       color: "#fff", // ensures text/icons are readable
       zIndex: (theme) => theme.zIndex.drawer + 1,
-    }}>
+      }}>
         <Toolbar>
         <IconButton
           size="large"
@@ -134,6 +135,13 @@ function NavBar() {
                 <ShoppingCartIcon className='icon-cart'/>
               </div>
             </Link>
+          </div>
+          <div className='log-in'>
+            <Button 
+            size="small" 
+            variant="outlined" 
+            startIcon={<AccountCircleIcon style={{fontSize: "30px"}}/>}
+            >Login</Button>
           </div>
         </Toolbar>
       </AppBar>

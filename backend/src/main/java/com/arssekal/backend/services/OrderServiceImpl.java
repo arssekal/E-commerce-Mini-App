@@ -28,10 +28,12 @@ public class OrderServiceImpl implements OrderService {
         order.setCustomerName(orderDto.getCustomerName());
         order.setEmail(orderDto.getEmail());
         order.setTotal(orderDto.getTotal());
-        order.setOrderDate(orderDto.getOrderDate());
         order.setAddress(orderDto.getAddress());
         order.setPhone(orderDto.getPhone());
+        order.setOrderDate(orderDto.getOrderDate());
+        order.setSeen(orderDto.isSeen()); // change
         order.setStatus(orderDto.getStatus());
+        System.out.println("########################## => DEBUG isSeen from DTO: " + orderDto.isSeen());
 
         List<OrderItem> items = orderDto.getItems().stream()
             .map(itemDto -> {
@@ -88,5 +90,14 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.delete(order);
         return OrderMapper.mapToOrderDto(order); 
     }
-    
+
+    @Override
+    public void markOrdersAsSeen() {
+        for(Order order : orderRepository.findAll()) {
+            if(!order.isSeen()) {
+                order.setSeen(true);
+                orderRepository.save(order);
+            }
+        }
+    }
 }

@@ -28,7 +28,7 @@ function Home() {
   
   return (
     <div className='home'>
-        <div className='hero' style={{ height: "100vh", position: "relative", marginLeft: "-40px", marginRight: "-40px"  }}>
+        <div className='hero'>
           <HeroSection/>
         </div>
 

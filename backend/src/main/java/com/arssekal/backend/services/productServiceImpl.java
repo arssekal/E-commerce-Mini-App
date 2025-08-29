@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.arssekal.backend.dto.ProductDto;
+import com.arssekal.backend.dto.SoldItemDTO;
 import com.arssekal.backend.entity.Product;
 import com.arssekal.backend.mapper.ProductMapper;
 import com.arssekal.backend.repository.ProductRepository;
@@ -69,5 +70,16 @@ public class productServiceImpl implements ProductService {
                                     .collect(Collectors.toList());
         return productDtos;
     };
+    @Override
+    public String updateStockQuantity(List<SoldItemDTO> soldItems) {
+        for(SoldItemDTO solditem : soldItems) {
+            Product product = productRepository
+                    .findById(solditem.getProductId())
+                    .orElseThrow(() -> new RuntimeException("product with this id is not available"));
 
+            product.setStockQuantity(product.getStockQuantity() - solditem.getQuantity());
+            productRepository.save(product);
+        }
+        return "stock quantity updated";
+    }
 }

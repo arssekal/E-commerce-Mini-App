@@ -1,6 +1,11 @@
 .home {
     margin-top: 76px;
     margin-bottom: 50px;
+    overflow-x: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
 }
 .home-content {
     
@@ -15,10 +20,10 @@
     color: #777;
 }
 .home .products {
-    margin: 0;
+    margin: 0 0 40px 0;
     display: grid;
     gap: 20px;
-    padding: 0px;
+    padding: 0px 40px;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 }
 @media (max-width: 670px) {
@@ -26,16 +31,18 @@
         display: flex;
         align-items: center;
         flex-direction: column;
+        padding: 0px 20px;
     }
 }
 
 /* landing page  */
 .hero {
-    
+    width: 100%;
+    background-color: red;
 }
 
 .hero-section {
-    background-color: red;
+    width: 100%;
     height: calc(100vh - 76px) !important;
 }
 .hero-section button {

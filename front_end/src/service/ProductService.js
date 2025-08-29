@@ -8,3 +8,6 @@ export const listProducts = () => {
 export const addProduct = (product) => {
     return axios.post(REST_API_BASE_URL, product)
 }
+export const updateStock = (soldItems) => {
+    return axios.put(REST_API_BASE_URL+ "update-stock", soldItems)
+}

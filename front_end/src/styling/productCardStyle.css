@@ -3,6 +3,8 @@
     max-width: 345px; 
     margin-top: 60px;
     box-shadow: 0 5px 10px #eee;
+    background-color: red;
+    border: 1px solid #d7ccc8;
 }
 .card:hover {
 }
@@ -36,12 +38,12 @@
     transform: scale(1.1);
 }
 .card-content {
-    border: 1px solid #d7ccc8;
     border-top: none;
     min-height: 210px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    border-top: 1px solid #d7ccc8;
 }
 .card-content .prod-price {
     font-size: 22px;

@@ -16,38 +16,38 @@ import { useAlert } from '../contexts/AlertContext'
 import CircularProgress from '@mui/material/CircularProgress';
 
 function ProductDetail() {
-  const {setOpen} = useAlert()
+  const { showAlert } = useAlert()
   const { allProducts } = useProducts()
   const {cartData, setProductCount, setCartData, productCount} = useCartData();  
   const [quantity, setQuantity] = useState(1)
   let { productId } = useParams();
-
-
+  
+  
   
   // let product = useMemo(() => {
-  //   for(const prod of allProducts) {
+    //   for(const prod of allProducts) {
   //     if(prod.id === Number(productId)) {
-  //       console.log("image url: "+prod.imageUrl)
-  //       return prod;
-  //     }
-  //   }
-  //   return null
-  // }, [productId, allProducts])
-
-  useEffect(() => {
-    if(cartData.length === 0 && JSON.parse(localStorage.getItem("cartData")) !== null ) {
-      const cartDataFromLocalStorage = JSON.parse(localStorage.getItem("cartData"))
+    //       console.log("image url: "+prod.imageUrl)
+    //       return prod;
+    //     }
+    //   }
+    //   return null
+    // }, [productId, allProducts])
+    
+    useEffect(() => {
+      if(cartData.length === 0 && JSON.parse(localStorage.getItem("cartData")) !== null ) {
+        const cartDataFromLocalStorage = JSON.parse(localStorage.getItem("cartData"))
       setCartData(cartDataFromLocalStorage)
     }
   }, [cartData, setCartData])
-
+  
   function handleAddToCartCLick() {
     let alreadyAdded = false
 
     // changes how many products in the cart
     setProductCount((prev) => prev + quantity)
     localStorage.setItem("productsCount", productCount+quantity)
-
+    
     const updatedCartData = cartData.map((p) => {
       if(p.id === product.id) {
         alreadyAdded = true
@@ -74,7 +74,7 @@ function ProductDetail() {
         {...product, quantity: quantity}
       ]))
     }
-    setOpen(true)
+    showAlert(`${quantity} Product added to cart!`, 'success');
   }
 
   if (!allProducts || allProducts.length === 0) {

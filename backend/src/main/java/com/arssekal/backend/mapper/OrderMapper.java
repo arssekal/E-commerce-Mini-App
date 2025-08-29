@@ -23,6 +23,7 @@ public class OrderMapper {
             orderDto.getStatus(),
             orderDto.getTotal(),
             orderDto.getOrderDate(),
+            orderDto.isSeen(),
             orderItems
         );
     }
@@ -41,6 +42,7 @@ public class OrderMapper {
             order.getStatus(),
             order.getTotal(),
             order.getOrderDate(),
+            order.isSeen(),
             orderItems
         );
     }

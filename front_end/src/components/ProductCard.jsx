@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 // material ui
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -12,12 +12,12 @@ import { Link } from 'react-router-dom';
 // context
 import { useCartData } from '../contexts/CartContext';
 import { useAlert } from '../contexts/AlertContext'
- 
 
 function ProductCard({product}) {
   const { cartData, setCartData, setProductCount, productCount } = useCartData();
+  const [btn, setBtn] = useState({btnContent: "", btnStyle: ""})
   const { showAlert } = useAlert()
-
+  
   function handleAddToCartCLick() {
     let alreadyAdded = false
     setProductCount((prev) => prev + 1)
@@ -42,18 +42,37 @@ function ProductCard({product}) {
           {...product, quantity: 1}
         ]
       }
-      )
-      localStorage.setItem("cartData", JSON.stringify(
-        [
+    )
+    localStorage.setItem("cartData", JSON.stringify(
+      [
         ...cartData,
         {...product, quantity: 1}
-        ]
-      ))
+      ]
+    ))
     }
     console.log("product: "+ product.oldPrice)
 
     showAlert('Product added to cart!', 'success');
   }
+
+  useEffect(() => {
+    if(product.stockQuantity === 0) {
+      setBtn({
+        btnContent: "Out Of Stock",
+        btnStyle: {
+          backgroundColor: "red",
+          color: "white"
+        }
+      })
+    } else
+    setBtn({
+      btnContent: "Add To Cart",
+      btnStyle: {
+        backgroundColor: "#6366F1",
+        color: "white"
+      }
+    })
+  }, [product])
 
   return (
     <Card className='card'>
@@ -70,15 +89,16 @@ function ProductCard({product}) {
       <CardContent className='card-content'>
         <Typography gutterBottom variant="h5" component="div">
          {product.title}
-         <div style={{display: "block", marginTop: "10px"}}><span className='prod-price'>${product.price}</span> <span className='old-price'>${product.oldPrice || 66}</span></div>
+         <div style={{display: "block", marginTop: "10px"}}><span className='prod-price'>${product.price}</span> <span className='old-price'>${product.oldPrice || null}</span></div>
         </Typography>
         <div className='card-actions'>
           <Link to={"/product/"+product.id}>
             <Button size="small" variant="outlined">View Details</Button>
           </Link>
-          <Button size="small" variant="contained" style={{backgroundColor: "#6366F1"}}
+          <Button size="small" variant="contained" style={{...btn.btnStyle}}
+          disabled={btn.btnContent === 'Out Of Stock'}
           onClick={handleAddToCartCLick}
-          >Add to Cart</Button>
+          >{btn.btnContent}</Button>
         </div>
       </CardContent>
     </Card>

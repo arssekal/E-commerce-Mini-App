@@ -36,8 +36,9 @@ public class Order {
     private String phone;
     // change
     private String status;
-    private Long total;
+    private double total;
     private LocalDate orderDate;
+    private boolean isSeen;
     
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> items;

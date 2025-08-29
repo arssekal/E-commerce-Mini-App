@@ -22,4 +22,8 @@ export const updateOrderStatus = (id, status) => {
 export const deleteOrder = (id) => {
     return axios.delete(REST_API_BASE_URL + id);
 } 
+// mark unseen orders as seen
+export const markOrdersAsSeen = () => {
+    return axios.put(REST_API_BASE_URL + "order-seens")
+} 
 

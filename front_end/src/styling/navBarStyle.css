@@ -34,6 +34,12 @@
     cursor: pointer;
     color: white;
 }
+.log-in button {
+    border-color: white !important; 
+    color: white;
+    padding: 5px 10px;
+    font-size: 16px
+}
 /* space betwenn nav bar and other elements */
 /* .space {
     margin-bottom: 100px;

@@ -1,11 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Drawer from '../components/Drawer'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 // css
 import '../styling/adminDashboardStyle.css'
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
-import Divider from '@mui/material/Divider';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 // dashboars
 import LocalMallIcon from '@mui/icons-material/LocalMall';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
@@ -25,11 +25,18 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { useProducts } from '../contexts/AllProducts';
 import DialogComp from '../components/DialogComp';
 import ConfirmAlert from '../components/ConfirmAlert';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import InputAdornment from '@mui/material/InputAdornment';
+import SearchIcon from '@mui/icons-material/Search';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 import '../App.css'
 // orders import
 import { styled } from '@mui/material/styles';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
-import { listOrders, updateOrderStatus } from '../service/OrderService';
+import { updateOrderStatus } from '../service/OrderService';
 import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -41,10 +48,16 @@ import MenuItem from '@mui/material/MenuItem';
 import PendingActionsIcon from '@mui/icons-material/PendingActions'; // pending
 import CropRotateIcon from '@mui/icons-material/CropRotate'; // processing
 import DoneAllIcon from '@mui/icons-material/DoneAll'; // delivered
+import { useOrders } from '../contexts/OrdersContext';
+import UnSeenOrders from '../components/UnSeenOrders';
 
 
 function AdminDashboard() {
   const [show, setShow] = useState("dashboard")
+  const [open, setOpen] = React.useState(false);
+
+  const { orders } = useOrders();
+  const [notificationCount, setNotificationCount] = useState(0)
 
   function handleWhatToShow(showThis) {
     setShow(showThis)
@@ -58,19 +71,43 @@ function AdminDashboard() {
     if(show === "orders") {
       return <Orders/>
     }
-    return <Dashboard />
+    return <Dashboard setShow={setShow}/>
 
+  }
+
+  useEffect(() => {
+    if(orders === null) return;
+    if(orders.length === 0) return;
+    let count = 0
+    orders.forEach((order) => {
+      if(!order.isSeen) {
+        count++;
+      }
+    })
+    setNotificationCount(count);
+    localStorage.setItem("notificationCount", count);
+  }, [orders])
+
+  function openNewOrders() {
+    if(notificationCount === 0) return;
+    setOpen(true)
   }
 
   return (
     <div className='admin-dashboard'>
       <div className='navBar'>
         <Drawer handleWhatToShow={handleWhatToShow}/>
-        <div className='user'>
-          <AccountCircleIcon className='icon'/>
-          <div className='user-info'>
-            <h5>Admin User</h5>
-            <p>admin@store.com</p>
+        <div className='right-side'>
+          <div className='notification' onClick={openNewOrders}>
+            {notificationCount !== 0 && <span>{notificationCount}</span>}
+            <NotificationsIcon className='notification-icon'/>
+          </div>
+          <div className='user'>
+            <AccountCircleIcon className='icon'/>
+            <div className='user-info'>
+              <h5>Admin User</h5>
+              <p>admin@store.com</p>
+            </div>
           </div>
         </div>
       </div> 
@@ -78,6 +115,9 @@ function AdminDashboard() {
       <div className='container'>
        {whatToShow()}
       </div>
+
+      {/* show unseen orders when clicking here */}
+      <UnSeenOrders open={open} setOpen={setOpen} handleWhatToShow={handleWhatToShow} setNotificationCount={setNotificationCount}/>
     </div>
   )
 }
@@ -86,19 +126,13 @@ export default AdminDashboard
 
 
 // ===================== dashboard =======================
-function Dashboard() {
-  const [orders, setOrders] = useState(null)
+function Dashboard({setShow}) {
+  const { orders } = useOrders();
   const [totalProducts, setTotalProducts] = useState(0)
   const [totalRevenue, setTotalRevenue] = useState(0)
   const [stock, setStock] = useState({inStock: 0, lowStock: 0, outOfStock: 0})
   const { allProducts } = useProducts();
   
-  useEffect(() => {
-    listOrders().then((responce) => {
-      setOrders(responce.data)
-    })
-    .catch((err) => console.log(err))
-  }, [setOrders])
 
   useEffect(() => {
     if (!allProducts || allProducts.length === 0) return;
@@ -132,7 +166,22 @@ function Dashboard() {
     setTotalRevenue(totalRevenue)
   }, [orders])
 
-
+  function statusStyle(status) {
+    status = status.toLocaleLowerCase()
+    if(status === "pending") {
+      return {
+        backgroundColor: "#5090f7"
+      }
+    }
+    if(status === "processing") {
+      return {
+        backgroundColor: "#fa8c3d"
+      }
+    }
+    return  {
+      backgroundColor: "#38fd80"
+    }
+  }
 
   if (!orders || orders.length === 0) {
     return (
@@ -175,7 +224,7 @@ function Dashboard() {
           <TableCell component="th" scope="row">{row.id}</TableCell>
           <TableCell align="center">{row.customerName}</TableCell>
           <TableCell align="right">${row.total}</TableCell>
-          <TableCell align="right">{row.status}</TableCell>
+          <TableCell align="right" className='status-cell'><span className='status' style={statusStyle(row.status)}>{row.status}</span></TableCell>
         </TableRow>
       )
     } 
@@ -196,6 +245,7 @@ function Dashboard() {
         totalRevenue += order.total
       }
     }
+
     return totalRevenue
   }
 
@@ -249,7 +299,7 @@ function Dashboard() {
           <DemoPaper variant="outlined" className='card-dashboard' onClick={revenueThisMonth}>
             <div className='info'>
               <p>Revenue This Month</p>
-              <span>${totalRevenue}</span>
+              <span>${totalRevenue.toFixed(2)}</span>
             </div>
             <div className='icon'>
               <AttachMoneyIcon />
@@ -281,7 +331,7 @@ function Dashboard() {
                 <TableCell>Recent Orders</TableCell>
                 <TableCell align="right"></TableCell>
                 <TableCell align="right"></TableCell>
-                <TableCell align="right">View All Orders</TableCell>
+                <TableCell className='view-all-orders' align="right" onClick={() => setShow("orders")}>View All Orders</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell >Order Id</TableCell>
@@ -361,7 +411,10 @@ function Dashboard() {
 function Products() { 
   const { allProducts } = useProducts();
   const [open, setOpen] = useState(false);
+  const [statusFilter, setStatusFilter] = useState("all status");
+  const [searchedProduct, setSearchedProduct] = useState("");
   const [openAlert, setOpenAlert] = useState(false);
+  const [stock, setStock] = useState({inStock: 0, lowStock: 0, outOfStock: 0})
   const [dialogContent, setDialogContent] = useState({title: "", description: "", 
     product: {
       title: "",
@@ -374,6 +427,7 @@ function Products() {
       stockQuantity: 0,
     }
   })
+  const targetRef = useRef(null)
 
   function status(stockQuantity) {
     if(stockQuantity === 0) {
@@ -384,6 +438,7 @@ function Products() {
     }
     return "In Stock"
   }
+
   function statusStyle(stockQuantity) {
     if(stockQuantity === 0) {
       return {
@@ -436,6 +491,37 @@ function Products() {
     )
   }
 
+
+  useEffect(() => {
+    if (!allProducts || allProducts.length === 0) return;
+    let inStock = 0, lowStock = 0, outOfStock = 0
+    let total = 0
+    allProducts.map((prod) => {
+      if(prod.stockQuantity === 0) outOfStock += 1
+      else if(prod.stockQuantity <= 10) lowStock += 1
+      else inStock += 1
+      total += 1
+    });
+    setStock({inStock, lowStock, outOfStock})
+  }, [allProducts]);
+
+  const filteredproducts = useMemo(() => {
+    if (!allProducts || allProducts.length === 0) return;
+    return allProducts.filter((prod) => {
+      if(statusFilter === "all status") return true
+      else if(statusFilter === "out of stock") {
+        if (prod.stockQuantity === 0) return true
+      }
+      else if(statusFilter === "low stock") {
+        if (prod.stockQuantity <= 10 && prod.stockQuantity) return true
+      }
+      else if(statusFilter === "in stock") {
+        if (prod.stockQuantity > 10) return true
+      }
+      return false
+    })
+  }, [statusFilter, allProducts])
+
   if (!allProducts || allProducts.length === 0) {
     return (
       <div className='product-details'>
@@ -447,6 +533,32 @@ function Products() {
       </div>
     );
   }
+
+  const DemoPaper = styled(Paper)(({ theme }) => ({
+    padding: theme.spacing(2),
+    ...theme.typography.body2,
+    textAlign: 'center',
+  }));
+
+  function handleStatusFilterChange(e) {
+    setStatusFilter(e.target.value)
+  }
+  const handleSearchProduct = (e) => {
+    if (e.key === "Enter") {
+      setSearchedProduct(e.target.value)
+      scrollToTarget()
+    }
+  };
+
+  const scrollToTarget = () => {
+    if (targetRef.current) {
+      targetRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  };
+
   
   return (
     <>
@@ -464,6 +576,109 @@ function Products() {
           Add Product 
         </Button>
       </div>
+
+      <div className='products-overview'>
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1 * 0.2, duration: 0.6, ease: "easeOut" }}
+        >
+          <DemoPaper variant="outlined" className='card-product'>
+            <div className='info'>
+              <span></span>
+              <p>Total Products</p>
+            </div>
+            <span>{allProducts.length}</span>
+          </DemoPaper>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 2 * 0.2, duration: 0.6, ease: "easeOut" }}
+        >
+          <DemoPaper variant="outlined" className='card-product'>
+            <div className='info'>
+              <span></span>
+              <p>In Stock</p>
+            </div>
+            <span>{stock.inStock}</span>
+          </DemoPaper>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 3 * 0.2, duration: 0.6, ease: "easeOut" }}
+        >
+          <DemoPaper variant="outlined" className='card-product'>
+            <div className='info'>
+              <span></span>
+              <p>Low Stock</p>
+            </div>
+            <span>{stock.lowStock}</span>
+          </DemoPaper>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 4 * 0.2, duration: 0.6, ease: "easeOut" }}
+        >
+          <DemoPaper variant="outlined" className='card-product'>
+            <div className='info'>
+              <span></span>
+              <p>Out Of Stock</p>
+            </div>
+            <span>{stock.outOfStock}</span>
+          </DemoPaper>
+        </motion.div>
+      </div>
+
+      <div className='products-controller'>
+        <Autocomplete
+          sx={{ width: 300 }}
+          freeSolo
+          id="free-solo-2-demo"
+          disableClearable
+          options={filteredproducts.map((prod) => prod.title)}
+          renderInput={(params) => (
+            <TextField
+              onChange={(e) => {
+                if(e.target.value.trim() === "") setSearchedProduct("")
+              }}
+              onKeyDown={handleSearchProduct}
+              {...params}
+              label="Search Product"
+              slotProps={{
+                input: {
+                  ...params.InputProps,
+                  type: 'search',
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                },
+              }}
+            />
+          )}
+        />
+        <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+          <InputLabel id="demo-select-small-label">Status</InputLabel>
+          <Select
+            labelId="demo-select-small-label"
+            id="demo-select-small"
+            value={statusFilter}
+            label="status"
+            onChange={handleStatusFilterChange}
+          >
+            <MenuItem value={"all status"}>All Status</MenuItem>
+            <MenuItem value={"in stock"}>In Stock</MenuItem>
+            <MenuItem value={"low stock"}>Low Stock</MenuItem>
+            <MenuItem value={"out of stock"}>Out Of Stock</MenuItem>
+          </Select>
+        </FormControl>
+      </div>
+
+
       <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
@@ -477,10 +692,12 @@ function Products() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {allProducts.map((row) => (
+          {filteredproducts.map((row) => (
             <TableRow
               key={row.title}
               sx={{ '&:last-child td, &:last-child th': { border: 0, height: 80 } }}
+              style={{backgroundColor: searchedProduct === row.title ? "#86f3ae": null}}
+              ref={searchedProduct === row.title ?  targetRef: null}
               >
               <TableCell component="th" scope="row">
                 {row.title}
@@ -513,9 +730,12 @@ function Products() {
 
 // ===================== orders =======================
 function Orders() {
-  const [orders, setOrders] = useState(null)
+  const { orders, setOrders } = useOrders();
   const [open, setOpen] = useState(false);
   const [order, setOrder] = useState(null)
+  const [statusFilter, setStatusFilter] = useState("all status");
+  const [searchedOrder, setSearchedOrder] = useState("");
+  const targetRef = useRef(null)
   // const [statusCount, setStatusCount] = useState({pending: 0, processing: 0})
   // from menu
   const [anchorEl, setAnchorEl] = useState(null);
@@ -526,24 +746,28 @@ function Orders() {
     textAlign: 'center',
   }));
 
-  useEffect(() => {
-    listOrders().then((responce) => {
-      setOrders(responce.data)
-    })
-    .catch((err) => console.log(err))
-  }, [])
 
   const [pending, processing, delivered] = useMemo(() => {
     let pending = 0, processing = 0, delivered = 0;
     if (orders) {
       for (let order of orders) {
-        if (order.status === "Pending") pending++;
-        else if (order.status === "Processing") processing++;
-        else if (order.status === "Delivered") delivered++;
+        let status = order.status.toLocaleLowerCase();
+        if (status === "pending") pending++;
+        else if (status === "processing") processing++;
+        else if (status === "delivered") delivered++;
       }
     }
     return [pending, processing, delivered];
   }, [orders]);
+
+  const filteredOrders = useMemo(() => {
+    if (!orders || orders.length === 0) return;
+    return orders.filter((order) => {
+      if(statusFilter === "all status") return true
+      return statusFilter.toLocaleLowerCase() === order.status.toLocaleLowerCase()
+    })
+  }, [statusFilter, orders])
+
 
   if (!orders || orders.length === 0) {
     return (
@@ -589,12 +813,13 @@ function Orders() {
   }
 
   function statusStyle(status) {
-    if(status === "Pending") {
+    status = status.toLocaleLowerCase()
+    if(status === "pending") {
       return {
         backgroundColor: "#5090f7"
       }
     }
-    if(status === "Processing") {
+    if(status === "processing") {
       return {
         backgroundColor: "#fa8c3d"
       }
@@ -603,6 +828,55 @@ function Orders() {
       backgroundColor: "#38fd80"
     }
   }
+
+  // download important order details 
+  const handleDownload = (row) => {
+    // 1. Prepare CSV headers and data
+    const headers = ["id", "customerName", "email", "phone", "address", "orderDate", "status", "total"];
+    const values = [
+      row.id,
+      row.customerName,
+      row.email,
+      row.phone,
+      row.address,
+      row.orderDate,
+      row.status,
+      row.total
+    ];
+
+    // 2. Convert to CSV format
+    const csvContent = headers.join(",") + "\n" + values.map(v => `"${v}"`).join(",");
+    console.log(csvContent)
+    // 3. Create a Blob and download it
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `order_${row.id}.csv`);
+    link.click();
+  };
+
+  function handleStatusFilterChange(e) {
+    setStatusFilter(e.target.value)
+  }
+
+  const handleSearchOrder = (e) => {
+    if (e.key === "Enter") {
+      setSearchedOrder(e.target.value)
+      scrollToTarget()
+    }
+  };
+
+  const scrollToTarget = () => {
+    if (targetRef.current) {
+      targetRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  };
+
+
 
   return (
     <>
@@ -659,6 +933,52 @@ function Orders() {
 
       <OrdersOverview orders={orders} pending={pending} processing={processing} delivered={delivered}/>
 
+      <div className='products-controller'>
+        <Autocomplete
+          sx={{ width: 300 }}
+          freeSolo
+          id="free-solo-2-demo"
+          disableClearable
+          options={filteredOrders.map((order) => order.customerName)}
+          renderInput={(params) => (
+            <TextField
+              onChange={(e) => {
+                if(e.target.value.trim() === "") setSearchedOrder("")
+              }}
+              onKeyDown={handleSearchOrder}
+              {...params}
+              label="Search Customer by Name"
+              slotProps={{
+                input: {
+                  ...params.InputProps,
+                  type: 'search',
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                },
+              }}
+            />
+          )}
+        />
+        <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+          <InputLabel id="demo-select-small-label">Status</InputLabel>
+          <Select
+            labelId="demo-select-small-label"
+            id="demo-select-small"
+            value={statusFilter}
+            label="status"
+            onChange={handleStatusFilterChange}
+          >
+            <MenuItem value={"all status"}>All Status</MenuItem>
+            <MenuItem value={"pending"}>Pending</MenuItem>
+            <MenuItem value={"processing"}>processing</MenuItem>
+            <MenuItem value={"delivered"}>Delivered</MenuItem>
+          </Select>
+        </FormControl>
+      </div>
+
 
       <TableContainer component={Paper} className='order-table'>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -669,15 +989,17 @@ function Orders() {
               <TableCell align="right">Date</TableCell>
               <TableCell align="right">Items</TableCell>
               <TableCell align="right">Total</TableCell>
-              <TableCell align="center">Status</TableCell>
+              <TableCell align="right">Status</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {[...orders].reverse().map((row) => (
+            {[...filteredOrders].reverse().map((row) => (
               <TableRow
                 key={row.id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0, height: 80 } }}
+                style={{backgroundColor: searchedOrder === row.customerName ? "#ffd791": null}}
+                ref={searchedOrder === row.customerName ?  targetRef: null}
                 >
                 <TableCell component="th" scope="row">{row.id}</TableCell>
                 <TableCell align="center">{row.customerName}</TableCell>
@@ -690,9 +1012,10 @@ function Orders() {
                     <MoreHorizIcon className='more' onClick={(e) => {
                       handleClick(e)
                       handleUpdateStatusCLick(row)
+                      console.log(row)
                     }}/>
                     <RemoveRedEyeOutlinedIcon className='view' onClick={() => viewOrderDetails(row)}/>
-                    <FileDownloadOutlinedIcon className='download' />
+                    <FileDownloadOutlinedIcon className='download' onClick={() => handleDownload(row)}/>
                   </div>
                   <Menu
                     className="menu"
@@ -801,10 +1124,21 @@ function OrdersOverview({ orders, pending, processing, delivered }) {
             <Counter target={item.value} />
           </div>
           <div className="icon">
-            <ArticleOutlinedIcon />
+            {item.label === "Pending" && <PendingActionsIcon/>}
+            {item.label === "Processing" && <CropRotateIcon/>}
+            {item.label === "Delivered" && <DoneAllIcon/>}
+            {item.label === "Total Orders" && <ArticleOutlinedIcon />}
           </div>
         </motion.div>
       ))}
     </div>
   );
 }
+
+
+
+
+
+
+
+
