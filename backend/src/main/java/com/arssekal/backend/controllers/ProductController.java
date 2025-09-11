@@ -23,6 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.arssekal.backend.dto.ProductDto;
 import com.arssekal.backend.dto.SoldItemDTO;
 import com.arssekal.backend.services.ProductService;
+
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -37,6 +39,7 @@ public class ProductController {
         @RequestParam("title") String title,
         @RequestParam("description") String description,
         @RequestParam("price") double price,
+        @RequestParam("category") String category,
         @RequestParam("stockQuantity") Long stockQuantity,
         @RequestParam("image") MultipartFile imageFile
     ) throws IOException {
@@ -51,6 +54,7 @@ public class ProductController {
         product.setTitle(title);
         product.setDescription(description);
         product.setPrice(price);
+        product.setCategory(category);
         product.setStockQuantity(stockQuantity);
         product.setImageUrl("/images/" + filename);
 
@@ -83,6 +87,7 @@ public class ProductController {
         @RequestParam("price") double price,
         // chnage
         @RequestParam("oldPrice") double oldPrice,
+        @RequestParam("category") String category,
         @RequestParam("stockQuantity") Long stockQuantity,
         @RequestParam("image") MultipartFile imageFile,
         @RequestParam("id") Long id
@@ -100,6 +105,7 @@ public class ProductController {
         product.setPrice(price);
         // chnage
         product.setOldPrice(oldPrice);
+        product.setCategory(category);
         product.setStockQuantity(stockQuantity);
         product.setImageUrl("/images/" + filename);
 
@@ -112,6 +118,7 @@ public class ProductController {
         ProductDto deletedProduct = productService.deleteProduct(id);
         return ResponseEntity.ok(deletedProduct);
     }
+
 
     @PutMapping("/update-stock")
     public ResponseEntity<String> updateStockQuantity(@RequestBody List<SoldItemDTO> soldItems) {

@@ -6,8 +6,8 @@
     background-color: red;
     border: 1px solid #d7ccc8;
 }
-.card:hover {
-}
+/* .card:hover {
+} */
 .image-item {
     object-fit: cover;
     width: 100%;
@@ -16,6 +16,23 @@
 .image-wrapper {
     position: relative;
     overflow: hidden;
+}
+.image-wrapper div {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    border-radius: 0 0 0 50%;
+    width: 30px;
+    height: 30px;
+    padding: 10px;
+    z-index: 10;
+    background-color: #6366F1;
+    color: white;
+}
+.image-wrapper div span {
+    position: absolute;
+    top: 0px;
+    right: 5px;
 }
 .image-wrapper::before {
     content: "";
@@ -60,4 +77,9 @@
     margin-top: 10px;
     display: flex;
     gap: 10px;
+}
+
+.card-actions .add-to-cart {
+    width: fit-content;
+    position: relative;
 }

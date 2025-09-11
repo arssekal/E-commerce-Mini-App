@@ -44,19 +44,29 @@ function UnSeenOrders({open, setOpen, handleWhatToShow, setNotificationCount}) {
 
   }, [orders])
 
+  // you can delete this no worry
+  function handleNewOrderClick(order) {
+    console.log("======= date =======")
+    console.log(order.orderDate)
+    let date = new Date()
+    console.log(date.toISOString())
+    console.log("====================")
+  }
+
   const listOfnewOrders = () => {
     if(unSeenOrders === null) return;
     if(unSeenOrders.length === 0) return;
 
     return [...unSeenOrders].reverse().map((order) => {
         return (
-            <div key={order.id} style={{padding: "10px 20px"}} className='new-order'>
+            <div key={order.id} style={{padding: "10px 20px"}} className='new-order' onClick={() => handleNewOrderClick(order)}>
                 <div className='new-order-info'>
                     <div><h4>{order.customerName}</h4><span>ORD-{order.id}</span></div>
                     <span></span>
                 </div>
                 <div className='new-order-total'>
                     <span>${order.total}</span>
+                    <span>2min</span>
                 </div>
             </div>
         );

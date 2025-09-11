@@ -76,6 +76,7 @@ function Cart() {
                         </div>
                         <Link to={"/checkout"}>
                             <Button variant="contained" disableElevation
+                            className='proceed-checkout'
                             style={{width: "100%"}}
                             >Proceed to Checkout</Button>
                         </Link>

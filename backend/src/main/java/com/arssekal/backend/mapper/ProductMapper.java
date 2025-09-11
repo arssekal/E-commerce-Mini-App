@@ -14,6 +14,7 @@ public class ProductMapper {
             // change
             productDto.getOldPrice(),
             productDto.getImageUrl(),
+            productDto.getCategory(),
             productDto.getStockQuantity()
         );
     }
@@ -27,6 +28,7 @@ public class ProductMapper {
             // chnage
             product.getOldPrice(),
             product.getImageUrl(),
+            product.getCategory(),
             product.getStockQuantity()
         );
     }

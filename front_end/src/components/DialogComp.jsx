@@ -9,6 +9,10 @@ import DialogTitle from '@mui/material/DialogTitle';
 import axios from 'axios';
 import { useState } from 'react';
 import Button from '@mui/material/Button';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
 
 function DialogComp({open, setOpen, content}) {
     const [product, setProduct] = useState({});
@@ -18,6 +22,7 @@ function DialogComp({open, setOpen, content}) {
         title: content.product.title || "",
         description: content.product.description || "",
         price: content.product.price || null,
+        category: content.product.category || "all",
         // change
         oldPrice: content.product.oldPrice || null,
         imageUrl: content.product.imageUrl || null,
@@ -46,13 +51,13 @@ function DialogComp({open, setOpen, content}) {
       formData.append("title", product.title);
       formData.append("description", product.description);
       formData.append("price", product.price);
+      formData.append("category", product.category);
       // change
       formData.append("oldPrice", product.oldPrice);
       formData.append("stockQuantity", product.stockQuantity);
       formData.append("image", product.imageFile); // file input
       formData.append("id", product.id); 
 
-      console.log(content.title)
 
       if(content.title === "Add Product") {
         try {
@@ -112,6 +117,25 @@ function DialogComp({open, setOpen, content}) {
                 setProduct({...product, description: e.target.value})
               }}
             />
+            <FormControl fullWidth style={{margin: "20px 0"}}>
+              <InputLabel id="demo-simple-select-label">Category</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={product.category}
+                label="Age"
+                onChange={(e) => setProduct({...product, category: e.target.value})}
+                MenuProps={{
+                  disableScrollLock: true,   // empêche le scroll jump
+                }}
+              >
+                {["all", "Clothes", "Electronics", "Sport and Fitness"].map((item) => {
+                  return (
+                    <MenuItem value={item.toLowerCase()}>{item}</MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
             <TextField
               required
               margin="dense"

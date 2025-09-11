@@ -6,6 +6,7 @@ import Cart from '../pages/Cart';
 import ProductDetail from '../pages/ProductDetail';
 import Checkout from '../pages/Checkout';
 import OrderSuccess from '../pages/OrderSuccess';
+import OrderFailed from '../pages/OrderFailed';
 
 function MainLayout() {
   return (
@@ -18,6 +19,7 @@ function MainLayout() {
         <Route path='/product/:productId' element={<ProductDetail />} />
         <Route path='/checkout' element={<Checkout />} />
         <Route path='/order-success' element={<OrderSuccess />} />
+        <Route path='/order-failed' element={<OrderFailed/>} />
       </Routes>
     </div>
   );

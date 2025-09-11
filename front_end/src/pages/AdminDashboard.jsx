@@ -470,6 +470,7 @@ function Products() {
           title: "",
           description: "",
           price: 0,
+          category: "",
           imageUrl: null,
           imageFile: null,
           stockQuantity: 0,
@@ -558,11 +559,19 @@ function Products() {
       });
     }
   };
+  const titleAndDescription = {
+    title: "Are you sure you want to delete this Product?", 
+    description: "After deletion there is no going back it will be removed for ever", 
+    action: "delete",
+    color: "red"
+  }
 
   
   return (
     <>
-    <ConfirmAlert openAlert={openAlert} setOpenAlert={setOpenAlert} content={dialogContent}/>
+    <ConfirmAlert openAlert={openAlert} setOpenAlert={setOpenAlert} content={dialogContent}
+    titleAndDescription={titleAndDescription}
+    />
     <DialogComp open={open} setOpen={setOpen} content={dialogContent} />
     <div className='products'>
       <div className='prod-header'>
@@ -782,7 +791,6 @@ function Orders() {
   }
   
   function viewOrderDetails(row) {
-    // alert("details")
     setOpen(true)
     setOrder(row)
     console.log(row)
@@ -881,6 +889,7 @@ function Orders() {
   return (
     <>
     <OrderDetails open={open} setOpen={setOpen} order={order}/>
+    
     <div className='orders'>
       <div className='order-header'>
         <div>
@@ -888,48 +897,6 @@ function Orders() {
           <p>View and manage customer orders</p>
         </div>
       </div>
-
-      {/* <div className='orders-overview'>
-        <DemoPaper variant="outlined" className='card-order'>
-          <div className='info'>
-            <p>Total Orders</p>
-            <span>{orders.length || 0}</span>
-          </div>
-          <div className='icon'>
-            <ArticleOutlinedIcon />
-          </div>
-        </DemoPaper>
-
-        <DemoPaper variant="outlined" className='card-order'>
-          <div className='info'>
-            <p>Pending</p>
-            <span>{pending}</span>
-          </div>
-          <div className='icon'>
-            <ArticleOutlinedIcon />
-          </div>
-        </DemoPaper>
-        
-        <DemoPaper variant="outlined" className='card-order'>
-          <div className='info'>
-            <p>Processing</p>
-            <span>{processing}</span>
-          </div>
-          <div className='icon'>
-            <ArticleOutlinedIcon />
-          </div>
-        </DemoPaper>
-
-        <DemoPaper variant="outlined" className='card-order'>
-          <div className='info'>
-            <p>Delivered</p>
-            <span>{delivered}</span>
-          </div>
-          <div className='icon'>
-            <ArticleOutlinedIcon />
-          </div>
-        </DemoPaper>
-      </div> */}
 
       <OrdersOverview orders={orders} pending={pending} processing={processing} delivered={delivered}/>
 
@@ -1012,7 +979,6 @@ function Orders() {
                     <MoreHorizIcon className='more' onClick={(e) => {
                       handleClick(e)
                       handleUpdateStatusCLick(row)
-                      console.log(row)
                     }}/>
                     <RemoveRedEyeOutlinedIcon className='view' onClick={() => viewOrderDetails(row)}/>
                     <FileDownloadOutlinedIcon className='download' onClick={() => handleDownload(row)}/>

@@ -30,5 +30,6 @@ public class Product {
     private double price;
     private double oldPrice;
     private String imageUrl;
+    private String category;
     private Long stockQuantity;
 }

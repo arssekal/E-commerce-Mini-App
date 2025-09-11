@@ -80,6 +80,7 @@ function Checkout() {
           validateClientInfo.isAddressInValid
       )  
   }
+
   // handle client order
   function handleOrder() {
       setValidateClientInfo(
@@ -94,25 +95,31 @@ function Checkout() {
                                isEmailInvalidCheck(clientInfo.email) ||
                                clientInfo.address.trim() === "" ||
                                isPhoneInvalidCheck(clientInfo.phone)
-                              
+
+      let allGood = true;
+
       if(!clienInfoInValid) {
-          localStorage.removeItem("cartData")
-          localStorage.removeItem("productsCount")  
-          addOrder(makeOrder(clientInfo, cartData))  
-
-          // here decrese the stock quantity of the selled products
-          const soldItems = cartData.map((item) => {
-            return {
-              productId: item.id,
-              quantity: item.quantity,
-            }
-          })
-
-          updateStock(soldItems)
           
-          setCartData([])
-          setProductCount(0)  
-          navigate("/order-success")                        
+          const soldItems = cartData.map((item) => {
+            if(item.quantity > item.stockQuantity) allGood = false;
+            return {
+                productId: item.id,
+                quantity: item.quantity,
+            }
+        })
+        if(allGood) {
+            localStorage.removeItem("cartData")
+            localStorage.removeItem("productsCount") 
+            addOrder(makeOrder(clientInfo, cartData))  
+            updateStock(soldItems)
+              
+            setCartData([])
+            setProductCount(0)  
+            navigate("/order-success")  
+            localStorage.clear()                      
+        } else {
+            navigate("/order-failed")   
+        }
       } 
   }  
   function makeOrder(clinetInformations, cartData) {
@@ -125,6 +132,7 @@ function Checkout() {
           unitPrice: item.price
         }
       })
+
       return {
         customerName: clinetInformations.name,
         email: clinetInformations.email,

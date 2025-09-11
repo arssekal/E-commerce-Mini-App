@@ -7,8 +7,21 @@
     left: 0;
     right: 0;
 }
-.home-content {
-    
+.home .filter-icon {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    padding: 15px;
+    background-color: #6366F1;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-content: center;
+    cursor: pointer;
+    transition: .3s;
+}
+.home .filter-icon:hover {
+    transform: translateY(-2px);
 }
 .home .product-header {
     margin: 0;
@@ -19,12 +32,83 @@
 .home .product-header p {
     color: #777;
 }
-.home .products {
-    margin: 0 0 40px 0;
+.home-content {
     display: grid;
     gap: 20px;
+}
+.home-content.with-filter {
+    grid-template-columns: 30% 70%; /* filter + products */
+}
+  
+.home-content.full-width {
+    grid-template-columns: 1fr; /* only products */
+}
+
+@media (max-width: 900px) {
+    .home-content.full-width,
+    .home-content.with-filter   {
+        grid-template-columns: 1fr;
+    }
+} 
+.home-content .filter-products {
+    border: 2px solid #cfcece;
+    border-radius: 10px;
+    height: fit-content;
+    padding: 20px;
+    width: 90%;
+    position: relative;
+    left: 50%;
+    transform: translatex(-50%);
+    background-color: #eee;
+    margin-top: 60px;
+}
+@media (max-width: 670px) {
+    .home .products {
+        width: 100%;
+        padding: 0px 20px;
+    }
+}
+.home-content .filter-products .filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.filter-products .filter-header div {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.filter-products .filter-header div .hide {
+    border: 2px solid white;
+    border-radius: 5px;
+    font-size: 40px;
+    padding: 3px 6px;
+    cursor: pointer;
+    transition: .3s;
+}
+.filter-products .filter-header div .hide:hover {
+    color: red;
+    transform: translateY(-1px);
+}
+.filter-products .filter-header button {
+    background-color: #6366F1;
+    border: 2px solid transparent;
+    transition: .3s;
+}
+.filter-products .filter-header button:hover {
+    color: #6366F1;
+    border-color: #6366F1;
+    background-color: white;
+}
+.home .products {
+    width: 100%;
+    margin-bottom: 40px;
+    display: grid;
+    justify-content: center;  
+    gap: 20px;
     padding: 0px 40px;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, 250px);
 }
 @media (max-width: 670px) {
     .home .products {
@@ -43,7 +127,7 @@
 
 .hero-section {
     width: 100%;
-    height: calc(100vh - 76px) !important;
+    height: calc(100vh - 70px) !important;
 }
 .hero-section button {
     padding: "12px 24px";

@@ -11,6 +11,7 @@ import com.arssekal.backend.entity.Product;
 import com.arssekal.backend.mapper.ProductMapper;
 import com.arssekal.backend.repository.ProductRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -45,6 +46,7 @@ public class productServiceImpl implements ProductService {
         // change
         product.setOldPrice(newProductDto.getOldPrice());
         product.setImageUrl(newProductDto.getImageUrl());
+        product.setCategory(newProductDto.getCategory());
         product.setStockQuantity(newProductDto.getStockQuantity());
 
         Product updatedProduct = productRepository.save(product);

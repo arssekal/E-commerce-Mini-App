@@ -18,5 +18,6 @@ public class ProductDto {
     // change
     private double oldPrice;
     private String imageUrl;
+    private String category;
     private Long stockQuantity;
 }

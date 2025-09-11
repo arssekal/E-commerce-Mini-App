@@ -1,0 +1,55 @@
+.order-failed {
+    margin-top: 100px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.failed-msg {
+    padding: 20px;
+    border: 1px solid #d7ccc8;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    max-width: 500px;
+}
+.failed-msg .failed-icon {
+    font-size: 80px;
+    color: red;
+}
+.failed-msg h4 {
+    font-size: 25px;
+}
+.failed-msg h5 {
+    font-size: 20px;
+}
+.failed-msg span {
+    font-weight: 700;
+    font-size: 30px;
+    color: #6366F1;
+}
+.failed-msg > p {
+    color: #8c768b;
+    font-weight: 600;
+}
+.failed-msg div {
+    width: 100%;
+    background-color: #e5e7eb;
+    padding: 20px 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.failed-msg div p {
+    color:  red;
+    font-weight: 700;
+}
+.failed-msg .go-home-btn {
+    width: 100%;
+    background-color: white;
+}
+.failed-msg .go-home-btn Button {
+    background-color: #6366F1;
+    width: 100%;
+}

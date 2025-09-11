@@ -16,7 +16,7 @@ export default function TemporaryDrawer({handleWhatToShow}) {
   };
 
   return (
-    <div>
+    <div className='temporary-drawer'>
       <ToggleButton className='toggle' onClick={toggleDrawer(true)} value="left" aria-label="left aligned"
       style={{fontSize: "10px", height: "20px", width: "20px", color: "white"}}
       >

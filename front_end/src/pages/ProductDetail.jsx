@@ -14,46 +14,46 @@ import { useProducts } from '../contexts/AllProducts';
 import { useAlert } from '../contexts/AlertContext'
 //
 import CircularProgress from '@mui/material/CircularProgress';
+// alert
+import ConfirmAlert from '../components/ConfirmAlert';
+
 
 function ProductDetail() {
   const { showAlert } = useAlert()
   const { allProducts } = useProducts()
   const {cartData, setProductCount, setCartData, productCount} = useCartData();  
-  const [quantity, setQuantity] = useState(1)
+  const [addedQuantity, setAddedQuantity] = useState(1)
+  const [quantity, setQuantity] = useState(0);
+  const [openAlert, setOpenAlert] = useState(false);
+  
+  
   let { productId } = useParams();
   
-  
-  
-  // let product = useMemo(() => {
-    //   for(const prod of allProducts) {
-  //     if(prod.id === Number(productId)) {
-    //       console.log("image url: "+prod.imageUrl)
-    //       return prod;
-    //     }
-    //   }
-    //   return null
-    // }, [productId, allProducts])
-    
-    useEffect(() => {
-      if(cartData.length === 0 && JSON.parse(localStorage.getItem("cartData")) !== null ) {
-        const cartDataFromLocalStorage = JSON.parse(localStorage.getItem("cartData"))
+  useEffect(() => {
+    if(cartData.length === 0 && JSON.parse(localStorage.getItem("cartData")) !== null ) {
+      const cartDataFromLocalStorage = JSON.parse(localStorage.getItem("cartData"))
       setCartData(cartDataFromLocalStorage)
     }
   }, [cartData, setCartData])
   
   function handleAddToCartCLick() {
+    if(product.stockQuantity <= quantity) {
+      setOpenAlert(true)
+      return;
+    } 
     let alreadyAdded = false
-
     // changes how many products in the cart
-    setProductCount((prev) => prev + quantity)
-    localStorage.setItem("productsCount", productCount+quantity)
+    setProductCount((prev) => prev + addedQuantity)
+    localStorage.setItem("productsCount", productCount + addedQuantity)
     
     const updatedCartData = cartData.map((p) => {
       if(p.id === product.id) {
         alreadyAdded = true
+        setQuantity(p.quantity + addedQuantity)
+        localStorage.setItem('orderedQuantity'+ product.id, p.quantity + addedQuantity)
         return {
           ...p,
-          quantity: p.quantity + quantity
+          quantity: p.quantity + addedQuantity
         }
       }
       return p
@@ -62,20 +62,28 @@ function ProductDetail() {
       setCartData(() => updatedCartData)
       localStorage.setItem("cartData", JSON.stringify(updatedCartData))
     } else {
+      setQuantity(addedQuantity)
+      localStorage.setItem('orderedQuantity'+ product.id, addedQuantity)
       setCartData((prev) => {
         return [
           ...prev,
-          {...product, quantity: quantity}
+          {...product, quantity: addedQuantity}
         ]
       }
       )
       localStorage.setItem("cartData", JSON.stringify([
         ...cartData,
-        {...product, quantity: quantity}
+        {...product, quantity: addedQuantity}
       ]))
     }
-    showAlert(`${quantity} Product added to cart!`, 'success');
+    showAlert(`${addedQuantity} Product added to cart!`, 'success');
   }
+
+  useEffect(() => {
+    const orderedQuantity = JSON.parse(localStorage.getItem('orderedQuantity'+ productId));
+    setQuantity(orderedQuantity)
+  },[productId])
+
 
   if (!allProducts || allProducts.length === 0) {
     return (
@@ -99,8 +107,18 @@ function ProductDetail() {
     );
   }
 
+  const titleAndDescription = {
+    title: "", 
+    description: "You reached the maximum quantity available on stock!!!", 
+    action: "understand",
+    color: "green"
+  }
 
   return (
+    <>
+    <ConfirmAlert openAlert={openAlert} setOpenAlert={setOpenAlert}
+        titleAndDescription={titleAndDescription}
+    />
     <div className='product-details'>
         <div>
             <Link to={"/"} className='return-home'>
@@ -121,17 +139,19 @@ function ProductDetail() {
                     <div className='add-remove'>
                         <div className='btn'
                         onClick={() => {
-                            setQuantity((prev) => prev + 1)
+                          if(product.stockQuantity <= quantity) { setOpenAlert(true); return}
+                          if(product.stockQuantity > addedQuantity) setAddedQuantity((prev) => prev + 1)
                         }}
+                        style={{cursor: product.stockQuantity <= addedQuantity ? "not-allowed": null}}
                         >
                             <AddIcon/>
                         </div>
-                        <span>{quantity}</span>
+                        <span>{addedQuantity}</span>
                         <div className='btn'
-                        style={{cursor: quantity === 1 ? "not-allowed": "pointer"}}
+                        style={{cursor: addedQuantity === 1 ? "not-allowed": "pointer"}}
                         onClick={() => {
-                            if(quantity > 1) {
-                                setQuantity((prev) => prev - 1)
+                            if(addedQuantity > 1) {
+                              setAddedQuantity((prev) => prev - 1)
                             }
                         }}
                         >
@@ -148,6 +168,8 @@ function ProductDetail() {
             </div>
         </div>
     </div>
+  </>
+
   )
 }
 

@@ -70,7 +70,7 @@ function DrawList({toggleDrawer, handleWhatToShow}) {
               "&.Mui-selected": { backgroundColor: "rgba(56, 239, 125, 0.2)", color: "#11998e" }
             }} >
                 <ListItemIcon>
-                    <HomeFilledIcon />
+                    <HomeFilledIcon className='home-icon'/>
                 </ListItemIcon>
                 <ListItemText primary={"dashboard"} />
             </ListItemButton>
@@ -84,7 +84,7 @@ function DrawList({toggleDrawer, handleWhatToShow}) {
               "&.Mui-selected": { backgroundColor: "rgba(56, 239, 125, 0.2)", color: "#11998e" }
             }} >
                 <ListItemIcon>
-                    <ViewInArIcon/>
+                    <ViewInArIcon className='products-icon'/>
                 </ListItemIcon>
                 <ListItemText primary={"Products"} />
             </ListItemButton>
@@ -98,7 +98,7 @@ function DrawList({toggleDrawer, handleWhatToShow}) {
               "&.Mui-selected": { backgroundColor: "rgba(56, 239, 125, 0.2)", color: "#11998e" }
             }} >
                 <ListItemIcon>
-                    <InventoryIcon/>
+                    <InventoryIcon className='orders-icon'/>
                 </ListItemIcon>
                 <ListItemText primary={"Orders"} />
             </ListItemButton>
@@ -112,7 +112,7 @@ function DrawList({toggleDrawer, handleWhatToShow}) {
               "&.Mui-selected": { backgroundColor: "rgba(56, 239, 125, 0.2)", color: "#11998e" }
             }} >
                 <ListItemIcon>
-                    <AddBoxIcon/>
+                    <AddBoxIcon className='add-product-icon'/>
                 </ListItemIcon>
                 <ListItemText primary={"Add Product"}/>
             </ListItemButton>
@@ -124,8 +124,8 @@ function DrawList({toggleDrawer, handleWhatToShow}) {
       <List style={{marginLeft: "15px", padding: "20px 0px"}}>
         <Link to={'/'}>
         <div className='admin-logout'>
-          <LogoutIcon />
-          <span>Log Out</span>
+          <LogoutIcon style={{color: "red"}}/>
+          <span className='log-out-span' style={{color: "red"}}>Log Out</span>
         </div>
         </Link>
       </List>
