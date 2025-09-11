@@ -427,6 +427,7 @@ function Products() {
       stockQuantity: 0,
     }
   })
+  const [categoryFilter, setCategoryFilter] = useState("all")
   const targetRef = useRef(null)
 
   function status(stockQuantity) {
@@ -522,6 +523,14 @@ function Products() {
       return false
     })
   }, [statusFilter, allProducts])
+
+  const filteredProductsFinal = useMemo(() => {
+    if (!filteredproducts || filteredproducts.length === 0) return [];
+    return filteredproducts.filter((prod) => {
+      if(categoryFilter === "all") return true
+      return categoryFilter === prod.category
+    })
+  }, [categoryFilter, filteredproducts])
 
   if (!allProducts || allProducts.length === 0) {
     return (
@@ -647,7 +656,7 @@ function Products() {
           freeSolo
           id="free-solo-2-demo"
           disableClearable
-          options={filteredproducts.map((prod) => prod.title)}
+          options={filteredProductsFinal.map((prod) => prod.title)}
           renderInput={(params) => (
             <TextField
               onChange={(e) => {
@@ -670,6 +679,24 @@ function Products() {
             />
           )}
         />
+        <div>
+        <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+          <InputLabel id="demo-select-small-label">Category</InputLabel>
+          <Select
+            labelId="demo-select-small-label"
+            id="demo-select-small"
+            value={categoryFilter}
+            label="status"
+            onChange={(e) => setCategoryFilter(e.target.value)}
+          >
+            {["all", "Clothes", "Electronics", "Sport and Fitness"].map((item) => {
+              return (
+               <MenuItem value={item.toLowerCase()}>{item}</MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
+
         <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
           <InputLabel id="demo-select-small-label">Status</InputLabel>
           <Select
@@ -685,6 +712,7 @@ function Products() {
             <MenuItem value={"out of stock"}>Out Of Stock</MenuItem>
           </Select>
         </FormControl>
+        </div>
       </div>
 
 
@@ -701,7 +729,7 @@ function Products() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {filteredproducts.map((row) => (
+          {filteredProductsFinal.map((row) => (
             <TableRow
               key={row.title}
               sx={{ '&:last-child td, &:last-child th': { border: 0, height: 80 } }}

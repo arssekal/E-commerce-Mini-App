@@ -19,7 +19,7 @@ export default function AllProductProvider({ children }) {
     .catch(error => {
       console.error("Failed to load products", error);
     });;
-  })
+  }, [])
 
   return (
     <ProductContext.Provider value={{allProducts, setAllProducts}}>

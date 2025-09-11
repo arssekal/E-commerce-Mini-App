@@ -95,11 +95,13 @@
     background-color: #6366F1;
     border: 2px solid transparent;
     transition: .3s;
+    box-shadow: none;
 }
 .filter-products .filter-header button:hover {
     color: #6366F1;
     border-color: #6366F1;
     background-color: white;
+    transform: translateY(-1px);
 }
 .home .products {
     width: 100%;

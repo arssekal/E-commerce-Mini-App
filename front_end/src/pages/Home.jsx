@@ -27,6 +27,7 @@ function Home() {
   const [value, setValue] = useState([0, 0]);
   const [filteredProducts, setFilteredProducts] = useState([])
   const [showFilter, setShowFilter] = useState("show")
+  const [showNumberOfFiltred, setShowNumberOfFiltered] = useState(false)
 
 
   useEffect(() => {
@@ -43,7 +44,7 @@ function Home() {
     });
 
     setMinmaxPrice({ minPrice: min, maxPrice: max });
-    // setValue([min, max]);
+    setValue([min, max]);
     setFilteredProducts((prev) => prev.length === 0 ? allProducts : prev);
   }, [allProducts]);
 
@@ -85,14 +86,15 @@ function Home() {
       return inPrice && matchesCategory;
     });
 
+    setShowNumberOfFiltered(true)
     setFilteredProducts(filtered);
-    console.log("filtered:", filtered);
   }
 
   function clearFilter() {
     setValue([minmaxPrice.minPrice, minmaxPrice.maxPrice])
     setCategoryFilter("all")
     setFilteredProducts(allProducts)
+    setShowNumberOfFiltered(false)
   }
 
   
@@ -158,6 +160,19 @@ function Home() {
                     </Select>
                   </FormControl>
                   <Button variant="contained" fullWidth onClick={applyFilter}>Apply</Button>
+                  {
+                    showNumberOfFiltred &&
+                    <div style={{
+                      marginTop: "15px", 
+                      color: "green", 
+                      border: "1px solid green", 
+                      textAlign: "center", 
+                      padding: "10px",
+                      borderRadius: "5px",
+                      fontSize: "18px",
+                    }}
+                      >{filteredProducts.length} products</div>
+                  }
             </div>
           }
           {/* end work on this */}
