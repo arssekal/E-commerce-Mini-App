@@ -110,7 +110,7 @@ function ProductCard({product}) {
       <CardContent className='card-content'>
         <Typography gutterBottom variant="h5" component="div">
          {product.title}
-         <div style={{display: "block", marginTop: "10px"}}><span className='prod-price'>${product.price}</span> <span className='old-price'>${product.oldPrice || null}</span></div>
+         <div style={{display: "block", marginTop: "10px"}}><span className='prod-price'>${product.price}</span> <span className='old-price'>{"$"+product.oldPrice || null}</span></div>
         </Typography>
         <div className='card-actions'>
           <Link to={"/product/"+product.id}>

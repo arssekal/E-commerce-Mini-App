@@ -1,38 +1,6 @@
 .shop-cart {
-    padding: 20px;
-    height: fit-content;
-    position: relative;
-}
-.shop-cart div {
-    padding: 5px;
-    padding-bottom: 0;
-    border-radius: 5px;
-    transition: .3s;
-}
-.shop-cart div:hover {
-    background-color: white;
-    display: inline-block;
-    
-}
-.shop-cart div:hover .icon-cart {
-    color: #6366F1;
-}
-.shop-cart span {
-    font-size: 15px;
-    position: absolute;
-    background-color: white;
-    color: #6366F1;
-    padding: 0px 5px;
-    border-radius: 50%;
-    top: 7px;
-    right: 20px;
-    font-weight: 600;
-    border: 1px solid #6366F1;
-    z-index: 1;
-}
-.shop-cart .icon-cart {
+    margin: 0 25px 0 20px;   
     cursor: pointer;
-    color: white;
 }
 .log-in button {
     border-color: white !important; 
@@ -40,10 +8,6 @@
     padding: 5px 10px;
     font-size: 16px
 }
-/* space betwenn nav bar and other elements */
-/* .space {
-    margin-bottom: 100px;
-} */
 
 /* drop down */
 .drop-down {

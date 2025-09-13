@@ -32,6 +32,7 @@ function ConfirmAlert({openAlert, setOpenAlert, content, titleAndDescription}) {
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        disableScrollLock
       >
         <DialogTitle id="alert-dialog-title">
           {/* {"Are you sure you want to delete this Product?"} */}

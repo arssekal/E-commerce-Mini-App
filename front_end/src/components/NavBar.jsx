@@ -13,11 +13,14 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useCartData } from '../contexts/CartContext';
 // styling
 import '../styling/navBarStyle.css'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 // propover
 import Popover from '@mui/material/Popover';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Button from '@mui/material/Button';
+//
+import Badge from '@mui/material/Badge';
+import MailIcon from '@mui/icons-material/Mail';
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -74,6 +77,7 @@ function NavBar() {
 
   // drop down menu
   const [anchorEl, setAnchorEl] = useState(null);
+  const navigate = useNavigate();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -82,16 +86,20 @@ function NavBar() {
   const handleAnchorClose = () => {
     setAnchorEl(null);
   };
+  function visiteCart() {
+    navigate("/cart")
+    window.location.reload(); // you can delete this
+  }
 
   
   return (
     <>
-    <BasicPopover anchorEl={anchorEl} handleAnchorClose={handleAnchorClose} handleClick={handleClick}/>
+      <BasicPopover anchorEl={anchorEl} handleAnchorClose={handleAnchorClose} handleClick={handleClick}/>
       <AppBar sx={{
       position: "fixed",
-      background: "linear-gradient(90deg,rgb(31, 7, 139),rgb(1, 101, 250))", // your gradient
-      boxShadow: "0 4px 12px rgba(0,0,0,0.1)", // soft shadow for depth
-      color: "#fff", // ensures text/icons are readable
+      background: "linear-gradient(90deg,rgb(31, 7, 139),rgb(1, 101, 250))",
+      boxShadow: "0 4px 12px rgba(0,0,0,0.1)", 
+      color: "#fff", 
       zIndex: (theme) => theme.zIndex.drawer + 1,
       }}>
         <Toolbar>
@@ -116,7 +124,7 @@ function NavBar() {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
           >
-            ArssekalShop
+            Shop
           </Typography>
 
           <Search>
@@ -128,14 +136,17 @@ function NavBar() {
               inputProps={{ 'aria-label': 'search' }}
             />
           </Search>
-          <div  className='shop-cart'>
-            <span>{productCount}</span>
-            <Link to={"/cart"}>
-              <div>
-                <ShoppingCartIcon className='icon-cart'/>
-              </div>
-            </Link>
-          </div>
+          <Badge badgeContent={productCount} color="secondary" className='shop-cart'
+          onClick={visiteCart}
+          sx={{
+            "& .MuiBadge-badge": {
+              backgroundColor: "#FF5722", // your personalized color
+              color: "white",             // text color
+            }
+          }}
+          >
+            <ShoppingCartIcon color="action" style={{color: "white"}}/>
+          </Badge>
           <div className='log-in'>
             <Button 
             size="small" 
@@ -164,6 +175,7 @@ function BasicPopover({anchorEl, handleAnchorClose}) {
         open={open}
         anchorEl={anchorEl}
         onClose={handleAnchorClose}
+        disableScrollLock
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'left',

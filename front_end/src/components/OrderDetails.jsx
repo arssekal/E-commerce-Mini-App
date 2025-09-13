@@ -44,6 +44,7 @@ export default function OrderDetails({open, setOpen, order}) {
         scroll={'paper'}
         aria-labelledby="scroll-dialog-title"
         aria-describedby="scroll-dialog-description"
+        disableScrollLock
       >
         <DialogTitle id="scroll-dialog-title">Order Details</DialogTitle>
         <DialogContent dividers={'paper'}>

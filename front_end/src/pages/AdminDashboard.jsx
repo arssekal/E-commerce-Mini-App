@@ -6,11 +6,13 @@ import '../styling/adminDashboardStyle.css'
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-// dashboars
+// dashboard
 import LocalMallIcon from '@mui/icons-material/LocalMall';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import SportsIcon from '@mui/icons-material/Sports';
 import Slider from '@mui/material/Slider';
+import Popover from '@mui/material/Popover';
+import Typography from '@mui/material/Typography';
 import { motion } from "motion/react"
 // products import
 import Table from '@mui/material/Table';
@@ -32,7 +34,10 @@ import SearchIcon from '@mui/icons-material/Search';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import Badge from '@mui/material/Badge';
 import '../App.css'
+//
+import { markOrdersAsSeen } from '../service/OrderService';
 // orders import
 import { styled } from '@mui/material/styles';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
@@ -50,14 +55,17 @@ import CropRotateIcon from '@mui/icons-material/CropRotate'; // processing
 import DoneAllIcon from '@mui/icons-material/DoneAll'; // delivered
 import { useOrders } from '../contexts/OrdersContext';
 import UnSeenOrders from '../components/UnSeenOrders';
+//
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 
 function AdminDashboard() {
   const [show, setShow] = useState("dashboard")
   const [open, setOpen] = React.useState(false);
-
+  const [anchorEl, setAnchorEl] = useState(null);
   const { orders } = useOrders();
   const [notificationCount, setNotificationCount] = useState(0)
+  const [unSeenOrders, setUnSeenOrders] = useState(null)
 
   function handleWhatToShow(showThis) {
     setShow(showThis)
@@ -88,19 +96,52 @@ function AdminDashboard() {
     localStorage.setItem("notificationCount", count);
   }, [orders])
 
-  function openNewOrders() {
+  function openNewOrders(e) {
     if(notificationCount === 0) return;
-    setOpen(true)
+    // setOpen(true)
+    handleClick(e)
   }
+  const handleAnchorClose = () => {
+    setAnchorEl(null);
+  };
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  
+  useEffect(() => {
+    if(orders === null) return;
+    if(orders.length === 0) return;
+    
+    const unReadOrders = orders.filter((order) => !order.isSeen)
 
+    setUnSeenOrders(unReadOrders)
+
+  }, [orders])
+  
   return (
-    <div className='admin-dashboard'>
+    <>
+      <BasicPopover anchorEl={anchorEl} 
+      handleAnchorClose={handleAnchorClose} 
+      handleClick={handleClick} 
+      unSeenOrders={unSeenOrders}
+      setNotificationCount={setNotificationCount}
+      handleWhatToShow={handleWhatToShow}
+      />
+      <div className='admin-dashboard'>
       <div className='navBar'>
         <Drawer handleWhatToShow={handleWhatToShow}/>
         <div className='right-side'>
           <div className='notification' onClick={openNewOrders}>
-            {notificationCount !== 0 && <span>{notificationCount}</span>}
-            <NotificationsIcon className='notification-icon'/>
+            <Badge badgeContent={notificationCount} 
+            sx={{
+              "& .MuiBadge-badge": {
+                backgroundColor: "#FF5722", 
+                color: "white",             
+              }
+            }}
+            >
+              <NotificationsIcon style={{color: "white"}}/>
+            </Badge>
           </div>
           <div className='user'>
             <AccountCircleIcon className='icon'/>
@@ -118,7 +159,8 @@ function AdminDashboard() {
 
       {/* show unseen orders when clicking here */}
       <UnSeenOrders open={open} setOpen={setOpen} handleWhatToShow={handleWhatToShow} setNotificationCount={setNotificationCount}/>
-    </div>
+      </div>
+  </>
   )
 }
 
@@ -355,7 +397,7 @@ function Dashboard({setShow}) {
           >
             <div>
               <p>
-                In Stock <span>{Math.floor((stock.inStock * 100) / totalProducts)}%</span>
+                In Stock <span style={{padding: "5px 10px", backgroundColor: "green", color: "white", borderRadius: "4px"}}>{Math.floor((stock.inStock * 100) / totalProducts)}%</span>
               </p>
               <span>{stock.inStock}</span>
             </div>
@@ -373,7 +415,7 @@ function Dashboard({setShow}) {
           >
             <div>
               <p>
-                Low Stock <span>{Math.round((stock.lowStock * 100) / totalProducts)}%</span>
+                Low Stock <span style={{padding: "5px 10px", backgroundColor: "orange", color: "white", borderRadius: "4px"}}>{Math.round((stock.lowStock * 100) / totalProducts)}%</span>
               </p>
               <span>{stock.lowStock}</span>
             </div>
@@ -391,7 +433,7 @@ function Dashboard({setShow}) {
           >
             <div>
               <p>
-              Out of Stock <span>{Math.round((stock.outOfStock * 100) / totalProducts)}%</span>
+              Out of Stock <span style={{padding: "5px 10px", backgroundColor: "red", color: "white", borderRadius: "4px"}}>{Math.round((stock.outOfStock * 100) / totalProducts)}%</span>
               </p>
               <span>{stock.outOfStock}</span>
             </div>
@@ -497,12 +539,10 @@ function Products() {
   useEffect(() => {
     if (!allProducts || allProducts.length === 0) return;
     let inStock = 0, lowStock = 0, outOfStock = 0
-    let total = 0
     allProducts.map((prod) => {
       if(prod.stockQuantity === 0) outOfStock += 1
       else if(prod.stockQuantity <= 10) lowStock += 1
       else inStock += 1
-      total += 1
     });
     setStock({inStock, lowStock, outOfStock})
   }, [allProducts]);
@@ -680,7 +720,7 @@ function Products() {
           )}
         />
         <div>
-        <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+        <FormControl sx={{ m: 1, minWidth: 120 }} size="small" disableScrollLock>
           <InputLabel id="demo-select-small-label">Category</InputLabel>
           <Select
             labelId="demo-select-small-label"
@@ -688,6 +728,9 @@ function Products() {
             value={categoryFilter}
             label="status"
             onChange={(e) => setCategoryFilter(e.target.value)}
+            MenuProps={{
+              disableScrollLock: true, 
+            }}
           >
             {["all", "Clothes", "Electronics", "Sport and Fitness"].map((item) => {
               return (
@@ -705,6 +748,9 @@ function Products() {
             value={statusFilter}
             label="status"
             onChange={handleStatusFilterChange}
+            MenuProps={{
+              disableScrollLock: true, 
+            }}
           >
             <MenuItem value={"all status"}>All Status</MenuItem>
             <MenuItem value={"in stock"}>In Stock</MenuItem>
@@ -773,8 +819,6 @@ function Orders() {
   const [statusFilter, setStatusFilter] = useState("all status");
   const [searchedOrder, setSearchedOrder] = useState("");
   const targetRef = useRef(null)
-  // const [statusCount, setStatusCount] = useState({pending: 0, processing: 0})
-  // from menu
   const [anchorEl, setAnchorEl] = useState(null);
   
   const DemoPaper = styled(Paper)(({ theme }) => ({
@@ -867,7 +911,6 @@ function Orders() {
 
   // download important order details 
   const handleDownload = (row) => {
-    // 1. Prepare CSV headers and data
     const headers = ["id", "customerName", "email", "phone", "address", "orderDate", "status", "total"];
     const values = [
       row.id,
@@ -965,6 +1008,9 @@ function Orders() {
             value={statusFilter}
             label="status"
             onChange={handleStatusFilterChange}
+            MenuProps={{
+              disableScrollLock: true, 
+            }}
           >
             <MenuItem value={"all status"}>All Status</MenuItem>
             <MenuItem value={"pending"}>Pending</MenuItem>
@@ -1017,6 +1063,7 @@ function Orders() {
                     anchorEl={anchorEl}
                     open={openMenu}
                     onClose={handleClose}
+                    disableScrollLock
                     slotProps={{
                       paper: {
                         sx: {
@@ -1052,9 +1099,6 @@ function Orders() {
     </>
   )
 }
-
-
-
 // helper for number counting animation
 const Counter = ({ target }) => {
   const [count, setCount] = useState(0);
@@ -1129,6 +1173,92 @@ function OrdersOverview({ orders, pending, processing, delivered }) {
   );
 }
 
+function BasicPopover({anchorEl, handleAnchorClose, unSeenOrders, setNotificationCount, handleWhatToShow}) {
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
+
+
+  // you can delete this no worry
+  function handleNewOrderClick(order) {
+    const today = new Date();
+    const orderDate = new Date(order.orderDate); // "2025-09-13"
+  
+    const diffInMs = today - orderDate; // difference in milliseconds
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+  
+    let timePassedAfterOrdered = "";
+
+    if (diffInDays === 0) {
+      timePassedAfterOrdered = "today";
+    } else if (diffInDays < 30) {
+      timePassedAfterOrdered = `${diffInDays} day${diffInDays > 1 ? "s" : ""} ago`;
+    } else if (diffInDays < 365) {
+      const months = Math.floor(diffInDays / 30);
+      timePassedAfterOrdered = `${months} month${months > 1 ? "s" : ""} ago`;
+    } else {
+      const years = Math.floor(diffInDays / 365);
+      timePassedAfterOrdered = `${years} year${years > 1 ? "s" : ""} ago`;
+    }
+  
+    return timePassedAfterOrdered
+  }
+
+  const listOfnewOrders = () => {
+    if(unSeenOrders === null) return;
+    if(unSeenOrders.length === 0) return;
+
+    return [...unSeenOrders].reverse().map((order) => {
+        return (
+            <div key={order.id} style={{padding: "10px 20px"}} className='new-order'
+            onClick={() => handleNewOrderClick(order)}
+            >
+                <div className='new-order-info'>
+                    <div><h4>{order.customerName}</h4><span>ORD-{order.id}</span></div>
+                    <span></span>
+                </div>
+                <div className='new-order-total'>
+                    <span>${order.total}</span>
+                    <span className='time-passed'><AccessTimeIcon/> {handleNewOrderClick(order)}</span>
+                </div>
+            </div>
+        );
+    })
+  }
+
+  function markUnSeenOrdersAsSeen() {
+    handleWhatToShow("orders")
+    markOrdersAsSeen()
+    setNotificationCount(0)
+  }
+  return (
+    <div className='drop-down'>
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleAnchorClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+        disableScrollLock
+      >
+        <Typography sx={{ p: 2}}>
+          {listOfnewOrders()}
+          <Button 
+          style={{marginTop: "10px"}}
+          variant="outlined"
+          fullWidth
+          onClick={() => markUnSeenOrdersAsSeen()}>View All Orders</Button>
+        </Typography>
+      </Popover>
+    </div>
+  );
+}
 
 
 

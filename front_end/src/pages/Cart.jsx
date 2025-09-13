@@ -6,6 +6,8 @@ import '../styling/cartPageStyle.css'
 import { Link, useNavigate } from 'react-router-dom';
 // context
 import { useCartData } from '../contexts/CartContext';
+// icons
+import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 
 
 function Cart() {
@@ -41,17 +43,13 @@ function Cart() {
   function noProducts() {
     if(cartData.length === 0) {
       return (
-        <div style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "20px",
-        }}>
-          <p>Your cart is empty</p>
-            <Button size="small" variant="contained" style={{backgroundColor: "#6366F1"}}
-            onClick={() => navigate("/")}
-            >Continue Shopping</Button>
+        <div className='empty-cart'>
+          <ShoppingBasketIcon className='shop-icon'/>
+          <h3>Your cart is empty</h3>
+          <p>Looks like you haven't added any items to your cart yet.</p>
+          <Button size="small" variant="contained" style={{backgroundColor: "#6366F1"}}
+            onClick={() => {navigate("/"); window.location.reload()}}
+          >Continue Shopping</Button>
         </div>
       )
     }
@@ -59,9 +57,9 @@ function Cart() {
   return (
     <>
     <div className='cart'>
-        <h1>Your Cart</h1>
         {noProducts()}
         {cartData.length !== 0 &&
+        <h1>Your Cart</h1> &&
         <div className='cart-content'>
             <div className='cart-items'>
                 {listOfProductsAdded}

@@ -12,6 +12,7 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
@@ -110,75 +111,107 @@ function Home() {
         <div className='hero'>
           <HeroSection/>
         </div>
-
-        <div className={`home-content ${showFilter === "show" ? "with-filter" : "full-width"}`}  
-          id='products'
-        >
+          <div className={`home-content ${showFilter === "show" ? "with-filter" : "full-width"}`}  
+            id='products'
+          >
           {
             showFilter === "show" &&
             <div className="filter-products">
                   <div className='filter-header'>
-                    <h3>Filter</h3>
-                    <div>
-                      <Button variant="contained" onClick={clearFilter}>Clear</Button>
-                      <VisibilityOffIcon className='hide' onClick={() => setShowFilter("hide")}/>
-                    </div>
+                        <h3>Filter</h3>
+                        <div>
+                          <Button variant="contained" onClick={clearFilter}>Clear</Button>
+                          <VisibilityOffIcon className='hide' onClick={() => setShowFilter("hide")}/>
+                        </div>
                   </div>
                   <div className="price-range">
-                    <div>
-                        <p>
-                        Price Range from <span>${value[0] === 1_000_000_000 ? 0: value[0]}</span> to <span>${value[1]}</span>
-                        </p>
-                        <Slider
-                          getAriaLabel={() => 'Temperature range'}
-                          value={value}
-                          onChange={handlePriceRangeChange}
-                          valueLabelDisplay="auto"
-                          getAriaValueText={valuetext}
-                          min={minmaxPrice.minPrice}
-                          max={minmaxPrice.maxPrice}
-                        />
-                    </div>
+                        <div>
+                            <p>
+                            Price Range from <span>${value[0] === 1_000_000_000 ? 0: value[0]}</span> to <span>${value[1]}</span>
+                            </p>
+                            <Slider
+                              getAriaLabel={() => 'Temperature range'}
+                              value={value}
+                              onChange={handlePriceRangeChange}
+                              valueLabelDisplay="auto"
+                              getAriaValueText={valuetext}
+                              min={minmaxPrice.minPrice}
+                              max={minmaxPrice.maxPrice}
+                            />
+                        </div>
                   </div>
                   <FormControl fullWidth style={{margin: "20px 0"}}>
-                    <InputLabel id="demo-simple-select-label">Category</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={categoryFilter}
-                      label="Age"
-                      onChange={(e) => setCategoryFilter(e.target.value)}
-                      MenuProps={{
-                        disableScrollLock: true,   // empêche le scroll jump
-                      }}
-                    >
-                      {["all", "Clothes", "Electronics", "Sport and Fitness"].map((item) => {
-                        return (
-                          <MenuItem value={item.toLowerCase()}>{item}</MenuItem>
-                        );
-                      })}
-                    </Select>
+                        <InputLabel id="demo-simple-select-label">Category</InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          value={categoryFilter}
+                          label="Age"
+                          onChange={(e) => setCategoryFilter(e.target.value)}
+                          MenuProps={{
+                            disableScrollLock: true,   // empêche le scroll jump
+                          }}
+                        >
+                          {["all", "Clothes", "Electronics", "Sport and Fitness"].map((item) => {
+                            return (
+                              <MenuItem value={item.toLowerCase()}>{item}</MenuItem>
+                            );
+                          })}
+                        </Select>
                   </FormControl>
                   <Button variant="contained" fullWidth onClick={applyFilter}>Apply</Button>
                   {
                     showNumberOfFiltred &&
                     <div style={{
-                      marginTop: "15px", 
-                      color: "green", 
-                      border: "1px solid green", 
-                      textAlign: "center", 
-                      padding: "10px",
-                      borderRadius: "5px",
-                      fontSize: "18px",
-                    }}
+                          marginTop: "15px", 
+                          color: "green", 
+                          border: "1px solid green", 
+                          textAlign: "center", 
+                          padding: "10px",
+                          borderRadius: "5px",
+                          fontSize: "18px",
+                        }}
                       >{filteredProducts.length} products</div>
                   }
             </div>
           }
-          {/* end work on this */}
+          {/* products */}
           <div className='products'>
             {listProducts}
           </div>
+        </div>
+        {/* footer */}
+        <div className="footer">
+            <div className='stay-updated'>
+              <div>
+                <h2>Stay updated with our latest deals</h2>
+                <p>Get exclusive offers and be the first to know about new arrivals</p>
+                <div>
+                <TextField
+                  fullWidth
+                  id="outlined-basic"
+                  label="Email"
+                  variant="outlined"
+                  placeholder="Enter your email"
+                  sx={{
+                    input: { color: "white" }, 
+                    "& .MuiInputBase-input::placeholder": {
+                      color: "gray", 
+                      opacity: 1,    
+                    },
+                    backgroundColor: "#353f4f",
+                    borderRadius: "7px"
+                  }}
+                />
+                  <Button variant="contained">Subscribe</Button>
+                </div>
+              </div>
+            </div>
+            <div className="infos">
+              <div className="box">
+
+              </div>
+            </div>
         </div>
     </div>
   )

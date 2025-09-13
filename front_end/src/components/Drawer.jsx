@@ -12,7 +12,6 @@ export default function TemporaryDrawer({handleWhatToShow}) {
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
-    console.log("drawer")
   };
 
   return (
@@ -22,8 +21,8 @@ export default function TemporaryDrawer({handleWhatToShow}) {
       >
         <MenuOutlinedIcon/>
       </ToggleButton>  
-      <Drawer open={open} onClose={toggleDrawer(false)}>
-        <DrawList  toggleDrawer={toggleDrawer} handleWhatToShow={handleWhatToShow}/>
+      <Drawer open={open} onClose={toggleDrawer(false)} disableScrollLock>
+        <DrawList  closeDrawer={() => setOpen(false)} handleWhatToShow={handleWhatToShow}/>
       </Drawer>
     </div>
   );

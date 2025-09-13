@@ -87,7 +87,7 @@ function DialogComp({open, setOpen, content}) {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} style={{minWidth: "500px"}}>
+    <Dialog open={open} onClose={handleClose} style={{minWidth: "500px"}} disableScrollLock>
         <DialogTitle>{content.title}</DialogTitle>
         <DialogContent sx={{ paddingBottom: 0 }}>
           <DialogContentText>

@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import '../styling/checkoutStyle.css';
 // context
 import { useCartData } from '../contexts/CartContext';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { addOrder } from '../service/OrderService';
 import { updateStock } from '../service/ProductService';
 

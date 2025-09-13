@@ -55,7 +55,6 @@ const addedProducts = [
   },
 ];
 
-// ✅ Custom hook MUST be declared before the component export
 export const useCartData = () => {
   return useContext(CartContext);
 };

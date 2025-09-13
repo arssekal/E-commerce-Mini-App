@@ -19,7 +19,7 @@ import { Link } from 'react-router-dom';
 
 
 
-function DrawList({toggleDrawer, handleWhatToShow}) {
+function DrawList({closeDrawer, handleWhatToShow}) {
   const [open, setOpen] = useState(false);
   const [dialogContent, setDialogContent] = useState({title: "", description: "", 
       product: {
@@ -52,7 +52,6 @@ function DrawList({toggleDrawer, handleWhatToShow}) {
       height: "100%",
       background: "linear-gradient(90deg, #a0e6dc, #c7f8e0)"
     }} role="presentation"  
-    onClick={() => toggleDrawer(false)}
     >
       <div>
       <List style={{marginLeft: "15px"}}>
@@ -63,21 +62,23 @@ function DrawList({toggleDrawer, handleWhatToShow}) {
       <List>
 
         <ListItem disablePadding onClick={() => {
-            handleWhatToShow("dashboard")
+          handleWhatToShow("dashboard")
+          closeDrawer();
         }}>
-            <ListItemButton sx={{ 
-              "&:hover": { backgroundColor: "rgba(84, 252, 148, 0.45)" }, // light green hover
-              "&.Mui-selected": { backgroundColor: "rgba(56, 239, 125, 0.2)", color: "#11998e" }
-            }} >
-                <ListItemIcon>
-                    <HomeFilledIcon className='home-icon'/>
-                </ListItemIcon>
-                <ListItemText primary={"dashboard"} />
-            </ListItemButton>
+          <ListItemButton sx={{ 
+            "&:hover": { backgroundColor: "rgba(84, 252, 148, 0.45)" }, // light green hover
+            "&.Mui-selected": { backgroundColor: "rgba(56, 239, 125, 0.2)", color: "#11998e" }
+          }} >
+              <ListItemIcon>
+                  <HomeFilledIcon className='home-icon'/>
+              </ListItemIcon>
+              <ListItemText primary={"dashboard"} />
+          </ListItemButton>
         </ListItem>
 
         <ListItem disablePadding onClick={() => {
             handleWhatToShow("products")
+            closeDrawer();
         }}>
             <ListItemButton sx={{ 
               "&:hover": { backgroundColor: "rgba(84, 252, 148, 0.45)" }, // light green hover
@@ -92,6 +93,7 @@ function DrawList({toggleDrawer, handleWhatToShow}) {
 
         <ListItem disablePadding onClick={() => {
             handleWhatToShow("orders")
+            closeDrawer();
         }}>
             <ListItemButton sx={{ 
               "&:hover": { backgroundColor: "rgba(84, 252, 148, 0.45)" }, // light green hover

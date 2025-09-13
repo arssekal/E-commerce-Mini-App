@@ -1,5 +1,5 @@
 .home {
-    margin-top: 76px;
+    margin-top: 55px;
     margin-bottom: 50px;
     overflow-x: hidden;
     position: absolute;
@@ -124,12 +124,11 @@
 /* landing page  */
 .hero {
     width: 100%;
-    background-color: red;
 }
 
 .hero-section {
     width: 100%;
-    height: calc(100vh - 70px) !important;
+    height: calc(100vh - 50px) !important;
 }
 .hero-section button {
     padding: "12px 24px";
@@ -140,4 +139,37 @@
     cursor: "pointer";
     font-size: "1rem";
     margin-top: "1rem"
+}
+/* footer */
+.footer {
+
+}
+.footer .stay-updated {
+    background-color: #1e293b;
+    padding: 20px;
+    padding-bottom: 40px;
+    display: flex;
+    justify-content: center;
+}
+.footer .stay-updated div {
+    text-align: center;
+    width: 70%;
+}
+.footer .stay-updated div h2 {
+    color: white;
+    padding-bottom: 10px;
+}
+.footer .stay-updated div p {
+    margin-bottom: 20px;
+    color: #aaaaaa;
+}
+.footer .stay-updated div div {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+.footer .stay-updated div div button {
+    border-radius: 5px;
+    padding: 0 30px;
 }
