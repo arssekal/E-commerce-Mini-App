@@ -2670,13 +2670,13 @@ const testOrders = [
     },
     {
       "id": 74,
-      "customerName": "said",
+      "customerName": "test2",
       "email": "test2@gmail.com",
       "address": "Annexe de cité universitaire",
       "phone": "0654893733",
       "status": "pending",
       "total": 59.49,
-      "orderDate": "2023-04-01",
+      "orderDate": "2025-09-10",
       "items": [
         {
           "id": 144,
@@ -2694,18 +2694,18 @@ const testOrders = [
           "unitPrice": 59.49
         }
       ],
-      "seen": false,
+      "seen": true,
       "isSeen": false
     },
     {
       "id": 75,
-      "customerName": "ahmed",
+      "customerName": "samah",
       "email": "samah@gmail.com",
       "address": "Annexe de cité universitaire",
       "phone": "0654893733",
       "status": "pending",
       "total": 300,
-      "orderDate": "2025-09-18",
+      "orderDate": "2025-09-15",
       "items": [
         {
           "id": 145,
@@ -2723,7 +2723,7 @@ const testOrders = [
           "unitPrice": 300
         }
       ],
-      "seen": false,
+      "seen": true,
       "isSeen": false
     },
     {
@@ -2799,7 +2799,7 @@ const testOrders = [
       "seen": false,
       "isSeen": false
     }
-]
+  ]
 const OrdersContext = createContext({})
 
 export const useOrders = () => {
@@ -2816,7 +2816,6 @@ export default function OrdersProvider({children}) {
     //     })
     //     .catch((err) => console.log(err))
     // }, [])
-
     return (
         <OrdersContext.Provider value={{orders, setOrders}}>
             {children}

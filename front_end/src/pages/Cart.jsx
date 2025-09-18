@@ -48,7 +48,7 @@ function Cart() {
           <h3>Your cart is empty</h3>
           <p>Looks like you haven't added any items to your cart yet.</p>
           <Button size="small" variant="contained" style={{backgroundColor: "#6366F1"}}
-            onClick={() => {navigate("/"); window.location.reload()}}
+            onClick={() => {navigate("/"); /*window.location.reload()*/}}
           >Continue Shopping</Button>
         </div>
       )

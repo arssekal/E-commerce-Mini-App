@@ -88,7 +88,7 @@ function NavBar() {
   };
   function visiteCart() {
     navigate("/cart")
-    window.location.reload(); // you can delete this
+    // window.location.reload(); // you can delete this
   }
 
   
