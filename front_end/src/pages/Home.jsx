@@ -47,11 +47,13 @@ function Home() {
     setMinmaxPrice({ minPrice: min, maxPrice: max });
     setValue([min, max]);
     setFilteredProducts((prev) => prev.length === 0 ? allProducts : prev);
+    console.log("all products: ")
+    console.log(allProducts)
   }, [allProducts]);
 
 
   const listProducts = useMemo(() => {
-    if(!filteredProducts) return <h1>no products with those filters</h1>
+    if(!filteredProducts || filteredProducts.length === 0) return <NoProductsFound clearFilter={clearFilter}/>
     return filteredProducts.map((prod) => (
       <ProductCard product={prod} key={prod.id} />
     ))
@@ -209,7 +211,7 @@ function Home() {
             </div>
             <div className="infos">
               <div className="box">
-
+                made by <span>Arssekal Lhoussaine</span>
               </div>
             </div>
         </div>
@@ -258,3 +260,19 @@ const HeroSection = () => {
     </div>
   );
 };
+
+
+import SearchOffIcon from '@mui/icons-material/SearchOff';
+function NoProductsFound({clearFilter}) {
+  return (
+     <div className='no-products'>
+      {/* icon */}
+      <SearchOffIcon className='search-off'/>
+      <div>
+        <span>No products found</span>
+        <p>Try adjusting your filters or search keywords to find what you're looking for.</p>
+      </div>
+      <Button variant="contained" onClick={clearFilter} className='clear'>Clear</Button>
+     </div>
+  );
+}
