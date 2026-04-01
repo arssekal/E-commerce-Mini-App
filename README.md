@@ -12,8 +12,9 @@ A full-stack e-commerce application built with **Java Spring Boot** (backend) an
 
 ## � Preview
 
+![Demo Image](./assets/first.png)
 
-[![Demo](./assets/first.png)](./assets/preview.mp4) <!-- ok -->
+[Click here to watch the video](./assets/preview.mp4)
 
 ## �📁 Project Structure
 
