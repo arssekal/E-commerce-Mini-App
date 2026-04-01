@@ -10,7 +10,11 @@ A full-stack e-commerce application built with **Java Spring Boot** (backend) an
 - 👨‍💼 Admin dashboard for order management
 - 🔔 Order notifications and status tracking
 
-## 📁 Project Structure
+## � Preview
+
+[![Demo](./front_end/public/demo/first.png)](./front_end/public/demo/preview.mkv)
+
+## �📁 Project Structure
 
 ```
 E-commerce-Mini-App/
