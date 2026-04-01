@@ -16,12 +16,13 @@ import TextField from '@mui/material/TextField';
 
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import axios from "axios";
 
 function valuetext(value) {
   return `$${value}`;
 }
 
-function Home() {
+function Home({searchTerm}) {
   const { allProducts } = useProducts()
   const [minmaxPrice, setMinmaxPrice] = useState({minPrice: 1_000_000_000, maxPrice: 0})
   const [categoryFilter, setCategoryFilter] = useState("all")
@@ -51,6 +52,25 @@ function Home() {
     console.log(allProducts)
   }, [allProducts]);
 
+  // in test stage not confirmd yet
+  useEffect(() => {
+    if (searchTerm && searchTerm.trim() !== "") {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get(
+            `http://localhost:8080/api/products/search?keyword=${searchTerm}`
+          );
+          setFilteredProducts(response.data || []);
+        } catch (error) {
+          console.error("Error searching:", error);
+        }
+      };
+      fetchData();
+    } else {
+      setFilteredProducts(allProducts); // clear results if empty
+    }
+  }, [searchTerm]);  
+  // end test stage
 
   const listProducts = useMemo(() => {
     if(!filteredProducts || filteredProducts.length === 0) return <NoProductsFound clearFilter={clearFilter}/>
@@ -62,13 +82,22 @@ function Home() {
   if (!allProducts || allProducts.length === 0) {
     return (
       <div className='home'>
-          <div style={{ textAlign: "center", padding: "2rem", display: "flex", justifyContent: "center", alignItems: "center"}}>
-            <p style={{display: "flex", alignItems: "center", gap: "10px"}}>
+          <div style={{ 
+            height: "calc(100vh - 55px)",
+            textAlign: "center", 
+            padding: "2rem", 
+            display: "flex", 
+            justifyContent: "center", 
+            alignItems: "center",
+            position: "relative",
+          }}>
+            <p style={{display: "flex", alignItems: "center", gap: "10px", top: "50%",
+            transform: "translateY(-50%)"}}>
               Loading Products<CircularProgress />
             </p>
           </div>
-        </div>
-      );
+      </div>
+    );
   }
 
   
@@ -189,29 +218,29 @@ function Home() {
                 <h2>Stay updated with our latest deals</h2>
                 <p>Get exclusive offers and be the first to know about new arrivals</p>
                 <div>
-                <TextField
-                  fullWidth
-                  id="outlined-basic"
-                  label="Email"
-                  variant="outlined"
-                  placeholder="Enter your email"
-                  sx={{
-                    input: { color: "white" }, 
-                    "& .MuiInputBase-input::placeholder": {
-                      color: "gray", 
-                      opacity: 1,    
-                    },
-                    backgroundColor: "#353f4f",
-                    borderRadius: "7px"
-                  }}
-                />
+                  <TextField
+                    fullWidth
+                    id="outlined-basic"
+                    label="Email"
+                    variant="outlined"
+                    placeholder="Enter your email"
+                    sx={{
+                      input: { color: "white" }, 
+                      "& .MuiInputBase-input::placeholder": {
+                        color: "gray", 
+                        opacity: 1,    
+                      },
+                      backgroundColor: "#353f4f",
+                      borderRadius: "7px"
+                    }}
+                  />
                   <Button variant="contained">Subscribe</Button>
                 </div>
               </div>
             </div>
             <div className="infos">
               <div className="box">
-                made by <span>Arssekal Lhoussaine</span>
+                &copy; made by <span>Arssekal Lhoussaine</span>
               </div>
             </div>
         </div>

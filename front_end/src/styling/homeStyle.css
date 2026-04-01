@@ -171,6 +171,15 @@
     justify-content: space-between;
     gap: 20px;
 }
+@media (max-width: 900px) {
+    .footer .stay-updated div div {
+        flex-direction: column;
+    }
+    .footer .stay-updated div div button {
+        border-radius: 5px;
+        padding: 10px 30px;
+    }
+}
 .footer .stay-updated div div button {
     border-radius: 5px;
     padding: 0 30px;

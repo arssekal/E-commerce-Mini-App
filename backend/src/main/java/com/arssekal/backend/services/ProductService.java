@@ -12,5 +12,6 @@ public interface ProductService {
     ProductDto deleteProduct(Long id);
     List<ProductDto> getAllProducts();
     String updateStockQuantity(List<SoldItemDTO> soldItems);
+    List<ProductDto> serchProducts(String keyword);
 
 }

@@ -125,4 +125,10 @@ public class ProductController {
         productService.updateStockQuantity(soldItems);
         return  ResponseEntity.ok("Stock updated successfully");
     }
+    @GetMapping("/search")
+    public ResponseEntity<List<ProductDto>> serchProductsBy(String keyword) {
+        List<ProductDto> serchedProducts = productService.serchProducts(keyword);
+        return ResponseEntity.ok(serchedProducts);
+    }
+    
 }

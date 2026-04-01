@@ -11,12 +11,7 @@ function App() {
         <Route path='/admin' element={<AdminDashboard />} />
 
         {/* MAIN SITE ROUTES */}
-        <Route 
-          path='/*' 
-          element={
-            <MainLayout />
-          } 
-        />
+        <Route path='/*' element={<MainLayout />}/>
       </Routes>
     </div>
   );

@@ -21,6 +21,7 @@ import Button from '@mui/material/Button';
 //
 import Badge from '@mui/material/Badge';
 import MailIcon from '@mui/icons-material/Mail';
+import axios from "axios";
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -67,8 +68,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 
 
-function NavBar() {
+function NavBar({onSearchChange}) {
   const {productCount, setProductCount} = useCartData();
+
   useEffect(() => {
     if(productCount === 0 && Number(JSON.parse(localStorage.getItem("productsCount"))) !== 0) {
       setProductCount(Number(JSON.parse(localStorage.getItem("productsCount"))))
@@ -91,7 +93,6 @@ function NavBar() {
     // window.location.reload(); // you can delete this
   }
 
-  
   return (
     <>
       <BasicPopover anchorEl={anchorEl} handleAnchorClose={handleAnchorClose} handleClick={handleClick}/>
@@ -122,7 +123,7 @@ function NavBar() {
             variant="h6"
             noWrap
             component="div"
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block'} }}
           >
             Shop
           </Typography>
@@ -134,8 +135,11 @@ function NavBar() {
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
+              onChange={(e) => onSearchChange(e.target.value)}
             />
           </Search>
+
+
           <Badge badgeContent={productCount} color="secondary" className='shop-cart'
           onClick={visiteCart}
           sx={{

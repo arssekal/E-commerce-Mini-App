@@ -1,5 +1,6 @@
 package com.arssekal.backend.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -83,5 +84,27 @@ public class productServiceImpl implements ProductService {
             productRepository.save(product);
         }
         return "stock quantity updated";
+    }
+
+    @Override
+    public List<ProductDto> serchProducts(String keyword) {
+        List<Product> searchedProducts = productRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCaseOrCategoryContainingIgnoreCase(keyword, keyword, keyword);
+        List<ProductDto> searchedProductDtos = new ArrayList<>();
+
+        searchedProducts.forEach((product) -> {
+            searchedProductDtos.add(new ProductDto(
+                product.getId(),
+                product.getTitle(),
+                product.getDescription(),
+                product.getPrice(),
+                // chnage
+                product.getOldPrice(),
+                product.getImageUrl(),
+                product.getCategory(),
+                product.getStockQuantity()
+            ));
+        });
+
+        return searchedProductDtos;
     }
 }

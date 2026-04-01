@@ -228,7 +228,7 @@ function Dashboard({setShow}) {
   if (!orders || orders.length === 0) {
     return (
       <div className='dashboard'>
-        <div style={{ textAlign: "center", padding: "2rem", display: "flex", justifyContent: "center", alignItems: "center", height: "100vh"}}>
+        <div style={{ textAlign: "center", padding: "2rem", display: "flex", justifyContent: "center", alignItems: "center", height: "calc(100vh - 70px)"}}>
           <p style={{display: "flex", alignItems: "center", gap: "10px"}}>
             Loading recent orders <CircularProgress />
           </p>
@@ -239,7 +239,7 @@ function Dashboard({setShow}) {
   if (!allProducts || allProducts.length === 0) {
     return (
       <div className='dashboard'>
-        <div style={{ textAlign: "center", padding: "2rem", display: "flex", justifyContent: "center", alignItems: "center", height: "100vh"}}>
+        <div style={{ textAlign: "center", padding: "2rem", display: "flex", justifyContent: "center", alignItems: "center", height: "calc(100vh - 70px)"}}>
           <p style={{display: "flex", alignItems: "center", gap: "10px"}}>
             Loading  <CircularProgress />
           </p>
@@ -574,11 +574,13 @@ function Products() {
 
   if (!allProducts || allProducts.length === 0) {
     return (
-      <div className='product-details'>
-        <div style={{ textAlign: "center", padding: "2rem", display: "flex", justifyContent: "center", alignItems: "center", height: "70vh"}}>
-          <p style={{display: "flex", alignItems: "center", gap: "10px"}}>
-            Loading Products <CircularProgress />
-          </p>
+      <div className='products'>
+        <div className='product-details' style={{position: "relative", top: 0, marginTop: 0, height: "calc(100vh - 200px)", display: "flex", justifyContent: "center", alignItems: "center"}}>
+          <div style={{ textAlign: "center", padding: "2rem", display: "flex", justifyContent: "center", alignItems: "center"}}>
+            <p style={{display: "flex", alignItems: "center", gap: "10px"}}>
+              Loading Products <CircularProgress />
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -852,13 +854,15 @@ function Orders() {
 
   if (!orders || orders.length === 0) {
     return (
-      <div className='product-details'>
-        <div style={{ textAlign: "center", padding: "2rem", display: "flex", justifyContent: "center", alignItems: "center", height: "70vh"}}>
+      <div className='products'>
+      <div className='product-details' style={{position: "relative", top: 0, marginTop: 0, height: "calc(100vh - 200px)", display: "flex", justifyContent: "center", alignItems: "center"}}>
+        <div style={{ textAlign: "center", padding: "2rem", display: "flex", justifyContent: "center", alignItems: "center"}}>
           <p style={{display: "flex", alignItems: "center", gap: "10px"}}>
-            Loading orders details<CircularProgress />
+            Loading orders <CircularProgress />
           </p>
         </div>
       </div>
+    </div>
     );
   }
   
